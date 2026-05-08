@@ -14,9 +14,9 @@ Create `/vs-online` comparison page to target "pass and play vs online chess" an
 
 ## 📁 Affected Files
 
-| Action | Path                     | Role                                            |
-| ------ | ------------------------ | ----------------------------------------------- |
-| Create | `app/vs-online/page.tsx` | New route with comparison content and CTA       |
+| Action | Path                     | Role                                      |
+| ------ | ------------------------ | ----------------------------------------- |
+| Create | `app/vs-online/page.tsx` | New route with comparison content and CTA |
 
 ## ✅ Acceptance Criteria
 

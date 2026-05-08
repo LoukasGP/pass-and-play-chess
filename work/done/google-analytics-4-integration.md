@@ -14,10 +14,10 @@ Add Google Analytics 4 (GA4) event tracking to measure user engagement: game sta
 
 ## 📁 Affected Files
 
-| Action | Path                  | Role                                 |
-| ------ | --------------------- | ------------------------------------ |
-| Modify | `app/layout.tsx`      | Add GA4 Script tags                  |
-| Modify | `app/page.tsx`        | Fire `game_start` and `move_made` events |
+| Action | Path             | Role                                     |
+| ------ | ---------------- | ---------------------------------------- |
+| Modify | `app/layout.tsx` | Add GA4 Script tags                      |
+| Modify | `app/page.tsx`   | Fire `game_start` and `move_made` events |
 
 ## ✅ Acceptance Criteria
 
@@ -42,6 +42,7 @@ npm run build
 ```
 
 Manual verification:
+
 1. Set `NEXT_PUBLIC_GA4_MEASUREMENT_ID` in `.env.local`
 2. Run `npm run dev`
 3. Open browser DevTools → Network tab → filter "google-analytics"

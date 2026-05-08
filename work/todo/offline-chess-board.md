@@ -14,11 +14,11 @@ Replace default Next.js page with fullscreen offline chess board. Two players si
 
 ## 📁 Affected Files
 
-| Action | Path                | Role                                                    |
-| ------ | ------------------- | ------------------------------------------------------- |
-| Modify | `package.json`      | Add chess.js (game logic) + react-chessboard (UI)      |
-| Modify | `app/page.tsx`      | Replace with ChessBoard component, fullscreen layout    |
-| Modify | `app/layout.tsx`    | Remove custom fonts, simplify to bare minimum           |
+| Action | Path             | Role                                                 |
+| ------ | ---------------- | ---------------------------------------------------- |
+| Modify | `package.json`   | Add chess.js (game logic) + react-chessboard (UI)    |
+| Modify | `app/page.tsx`   | Replace with ChessBoard component, fullscreen layout |
+| Modify | `app/layout.tsx` | Remove custom fonts, simplify to bare minimum        |
 
 ## ✅ Acceptance Criteria
 
@@ -42,6 +42,7 @@ npm run build
 ```
 
 Manual verification:
+
 1. `npm run dev`
 2. Open http://localhost:3000
 3. Drag white pawn from e2 to e4 → succeeds

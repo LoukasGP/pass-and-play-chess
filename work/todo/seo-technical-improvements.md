@@ -41,15 +41,15 @@ Add JSON-LD script to `app/layout.tsx` in the `<head>` section. Use WebApplicati
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "Pass & Play Chess",
-  description: "Free offline chess board for two players on the same device",
-  applicationCategory: "Game",
-  operatingSystem: "Web Browser",
-  offers: {
+  "name": "Pass & Play Chess",
+  "description": "Free offline chess board for two players on the same device",
+  "applicationCategory": "Game",
+  "operatingSystem": "Web Browser",
+  "offers": {
     "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
-  },
+    "price": "0",
+    "priceCurrency": "USD"
+  }
 };
 ```
 
@@ -58,7 +58,6 @@ const structuredData = {
 Add SEO-friendly content section to `app/page.tsx`. Use `sr-only` class to hide on mobile but keep visible to search engine crawlers. Include h1 heading, descriptive paragraphs, and feature list with target keywords.
 
 Keywords to include naturally:
-
 - "pass and play chess"
 - "offline chess board"
 - "two players"
@@ -76,12 +75,12 @@ Create `public/sitemap.xml` for current single-page structure. Update when conte
 
 ## 📁 Affected Files
 
-| Action | Path                 | Role                                                |
-| ------ | -------------------- | --------------------------------------------------- |
-| Modify | `app/layout.tsx`     | Add JSON-LD script in head for structured data      |
-| Modify | `app/page.tsx`       | Add semantic HTML content section for crawlers      |
-| Create | `public/robots.txt`  | Allow search engine crawling with sitemap reference |
-| Create | `public/sitemap.xml` | List all routes for search engine indexing          |
+| Action | Path                     | Role                                                |
+| ------ | ------------------------ | --------------------------------------------------- |
+| Modify | `app/layout.tsx`         | Add JSON-LD script in head for structured data      |
+| Modify | `app/page.tsx`           | Add semantic HTML content section for crawlers      |
+| Create | `public/robots.txt`      | Allow search engine crawling with sitemap reference |
+| Create | `public/sitemap.xml`     | List all routes for search engine indexing          |
 
 ## ✅ Acceptance Criteria
 
@@ -120,7 +119,6 @@ npm run build
 ```
 
 Manual verification:
-
 1. Run `npm run dev`
 2. View page source → verify `<script type="application/ld+json">` present
 3. View page source → verify `<h1>` and semantic content present

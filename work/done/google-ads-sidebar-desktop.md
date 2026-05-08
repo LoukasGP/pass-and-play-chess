@@ -40,16 +40,16 @@ Add Google AdSense ads on left and right sides of chess board. Visible on deskto
 ```typescript
 // components/GoogleAd.tsx
 interface GoogleAdProps {
-  readonly slot: string;           // AdSense slot ID (e.g., "1234567890")
-  readonly format?: 'auto' | 'rectangle' | 'vertical';
-  readonly className?: string;      // Additional Tailwind classes
+  readonly slot: string; // AdSense slot ID (e.g., "1234567890")
+  readonly format?: "auto" | "rectangle" | "vertical";
+  readonly className?: string; // Additional Tailwind classes
 }
 ```
 
 ```typescript
 // app/layout.tsx - Script component props
 interface AdSenseScriptConfig {
-  readonly client: string;          // AdSense publisher ID (ca-pub-XXXXXXXX)
+  readonly client: string; // AdSense publisher ID (ca-pub-XXXXXXXX)
 }
 ```
 
@@ -60,6 +60,7 @@ interface AdSenseScriptConfig {
 ### Step 1: Create GoogleAd Component
 
 Create `components/GoogleAd.tsx`:
+
 - Accept `slot`, `format`, `className` props per interface above
 - Render `<ins>` tag with AdSense data attributes (`data-ad-client`, `data-ad-slot`, `data-ad-format`)
 - Use Next.js `useEffect` to trigger `(adsbygoogle = window.adsbygoogle || []).push({})` after mount
@@ -68,6 +69,7 @@ Create `components/GoogleAd.tsx`:
 ### Step 2: Add AdSense Script to Layout
 
 Modify `app/layout.tsx`:
+
 - Import Next.js `<Script>` component from `next/script`
 - Add AdSense script tag with `strategy="afterInteractive"` and `crossOrigin="anonymous"`
 - Use environment variable `NEXT_PUBLIC_ADSENSE_CLIENT_ID` for publisher ID (do not hardcode)
@@ -75,6 +77,7 @@ Modify `app/layout.tsx`:
 ### Step 3: Update Page Layout to 3-Column Flexbox
 
 Modify `app/page.tsx`:
+
 - Wrap chess board in 3-column flexbox container
 - Place `<GoogleAd slot="LEFT_SLOT" />` before board
 - Place `<GoogleAd slot="RIGHT_SLOT" />` after board
@@ -87,11 +90,11 @@ Run `npm run build` after Step 2 to catch TypeScript/import errors early.
 
 ## 📁 Affected Files
 
-| Action | Path                     | Role                                                |
-| ------ | ------------------------ | --------------------------------------------------- |
+| Action | Path                      | Role                                                |
+| ------ | ------------------------- | --------------------------------------------------- |
 | Create | `components/GoogleAd.tsx` | Reusable ad component wrapping AdSense `<ins>` tag  |
-| Modify | `app/page.tsx`           | Update to 3-column flexbox, add responsive ad slots |
-| Modify | `app/layout.tsx`         | Add AdSense script via Next.js `<Script>`           |
+| Modify | `app/page.tsx`            | Update to 3-column flexbox, add responsive ad slots |
+| Modify | `app/layout.tsx`          | Add AdSense script via Next.js `<Script>`           |
 
 ---
 
@@ -139,6 +142,7 @@ npm run ci:validate && npm run test:e2e
 ```
 
 **Manual Verification:**
+
 1. Deploy to Vercel preview or production (ads won't render on localhost)
 2. Open Chrome DevTools → Network tab → verify AdSense script loads
 3. Open page on desktop (≥1024px) → verify ads visible both sides

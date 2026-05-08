@@ -27,6 +27,7 @@ GitHub Actions PR checks workflow (`.github/workflows/pr-checks.yml`) references
 Workflow file copied from template or other project that uses Prettier. This project doesn't have Prettier configured and doesn't have `format:check` script in `package.json`.
 
 **Current scripts in package.json:**
+
 ```json
 {
   "dev": "next dev",
@@ -39,15 +40,16 @@ Workflow file copied from template or other project that uses Prettier. This pro
 ```
 
 **Scripts referenced in workflow but missing:**
+
 - `format:check` — doesn't exist, no Prettier config
 - No specific `audit:security` script (workflow uses `npm audit` directly, which is fine)
 
 ## Affected Files
 
-| Action | File                                       | Role                            |
-| ------ | ------------------------------------------ | ------------------------------- |
-| Modify | `.github/workflows/pr-checks.yml`          | CI/CD workflow configuration    |
-| Modify | `package.json` (optional alternative fix)  | Add missing scripts if needed   |
+| Action | File                                      | Role                          |
+| ------ | ----------------------------------------- | ----------------------------- |
+| Modify | `.github/workflows/pr-checks.yml`         | CI/CD workflow configuration  |
+| Modify | `package.json` (optional alternative fix) | Add missing scripts if needed |
 
 ## Required Changes
 
@@ -57,29 +59,30 @@ Remove the entire `format` job from workflow since project doesn't use Prettier:
 
 ```yaml
 # DELETE this entire job section:
-  format:
-    name: Format Check
-    runs-on: ubuntu-latest
-    needs: setup
+format:
+  name: Format Check
+  runs-on: ubuntu-latest
+  needs: setup
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "25.2.1"
-          cache: "npm"
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "25.2.1"
+        cache: "npm"
 
-      - name: Install dependencies
-        run: npm ci
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Check formatting
-        run: npm run format:check
+    - name: Check formatting
+      run: npm run format:check
 ```
 
 And update the `build` job dependency:
+
 ```yaml
 # OLD:
 needs: [format, lint, typecheck, test, security]

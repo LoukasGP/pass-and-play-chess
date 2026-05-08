@@ -14,12 +14,12 @@ Add PWA manifest.json so users can "Add to Home Screen" on mobile devices. Suppo
 
 ## 📁 Affected Files
 
-| Action | Path                   | Role                                     |
-| ------ | ---------------------- | ---------------------------------------- |
-| Create | `app/manifest.json`    | PWA manifest with app name, icons, theme |
-| Modify | `app/layout.tsx`       | Add `<link rel="manifest">` tag          |
-| Create | `public/icon-192.png`  | PWA icon 192×192                         |
-| Create | `public/icon-512.png`  | PWA icon 512×512                         |
+| Action | Path                  | Role                                     |
+| ------ | --------------------- | ---------------------------------------- |
+| Create | `app/manifest.json`   | PWA manifest with app name, icons, theme |
+| Modify | `app/layout.tsx`      | Add `<link rel="manifest">` tag          |
+| Create | `public/icon-192.png` | PWA icon 192×192                         |
+| Create | `public/icon-512.png` | PWA icon 512×512                         |
 
 ## ✅ Acceptance Criteria
 
@@ -45,6 +45,7 @@ npm run start
 ```
 
 Manual verification:
+
 1. Open Chrome DevTools → Application tab → Manifest
 2. Verify all fields present and icons load
 3. Run Lighthouse audit → check PWA score

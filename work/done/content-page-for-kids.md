@@ -14,9 +14,9 @@ Create `/for-kids` parent-focused content page to target "teach kids chess", "ch
 
 ## 📁 Affected Files
 
-| Action | Path                     | Role                                          |
-| ------ | ------------------------ | --------------------------------------------- |
-| Create | `app/for-kids/page.tsx`  | New route with parent-focused content and CTA |
+| Action | Path                    | Role                                          |
+| ------ | ----------------------- | --------------------------------------------- |
+| Create | `app/for-kids/page.tsx` | New route with parent-focused content and CTA |
 
 ## ✅ Acceptance Criteria
 

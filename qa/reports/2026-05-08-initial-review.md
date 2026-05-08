@@ -11,6 +11,7 @@
 **Overall Status:** ⚠️ **Good foundation with test failures blocking production readiness**
 
 Your pass-and-play chess site has excellent fundamentals:
+
 - ✅ Core gameplay works flawlessly
 - ✅ SEO foundation solid (meta tags, structured data, content pages)
 - ✅ Monetization ready (Google Ads + GA4 integrated)
@@ -18,6 +19,7 @@ Your pass-and-play chess site has excellent fundamentals:
 - ✅ Clean, distraction-free UX matches positioning
 
 **Blockers:**
+
 - ❌ 4 test failures in `app/page.test.tsx` (tests outdated after SEO content added)
 - ⚠️ Missing design assets (OG image, PWA icons)
 
@@ -28,7 +30,9 @@ Your pass-and-play chess site has excellent fundamentals:
 ## ✅ What's Working Well
 
 ### 1. Product Positioning — Excellent
+
 Your competitive advantage is **real and defensible**:
+
 - **Zero-friction entry** — 0 clicks from URL to playable board (chess.com: 3-4 clicks)
 - **Distraction-free** — Fullscreen board only, no persistent nav/menus
 - **Offline-first** — Works without network (competitors require connection)
@@ -37,6 +41,7 @@ Your competitive advantage is **real and defensible**:
 This positioning targets underserved "pass and play chess" niche where major competitors (chess.com, lichess) treat it as secondary feature.
 
 ### 2. Technical Implementation — Solid
+
 - **Performance:** Sub-1s load time with Next.js SSG
 - **Code quality:** Clean TypeScript, no `any` types at boundaries, no security anti-patterns
 - **Architecture:** Proper separation (layout vs page, reusable GoogleAd component)
@@ -44,13 +49,16 @@ This positioning targets underserved "pass and play chess" niche where major com
 - **Accessibility:** sr-only content for screen readers, semantic HTML structure
 
 ### 3. Content Strategy — Well-Executed
+
 Two content pages target long-tail keywords:
+
 - `/how-to-play` — "how to play chess offline", "pass and play instructions"
 - `/vs-online` — "pass and play vs online chess", comparison queries
 
 Both pages include internal CTAs to drive traffic to main board.
 
 ### 4. Monetization — Ready to Launch
+
 - Google Ads integration complete (sidebar, desktop-only, non-intrusive)
 - GA4 event tracking implemented (`game_start`, `move_made`)
 - Metrics align with competitor analysis success criteria
@@ -67,6 +75,7 @@ Both pages include internal CTAs to drive traffic to main board.
 Tests expect "no headings" but SEO content section (added in `seo-technical-improvements.md` ticket) includes `<h1>` and `<h2>` tags in `sr-only` section.
 
 **Failing tests:**
+
 1. `displays only chessboard - no headers or navigation` — expects no headings, but sr-only section has h1/h2
 2. `has fullscreen layout with flexbox centering` — expects flex on root, but SEO section added `<>` fragment wrapper
 3. `board container is square and responsive` — can't find style attribute (DOM structure changed)
@@ -75,6 +84,7 @@ Tests expect "no headings" but SEO content section (added in `seo-technical-impr
 **Root cause:** Tests not updated after implementing technical SEO ticket. SEO content is intentional and correct (hidden from visual users, visible to crawlers).
 
 **Fix:** Update tests to:
+
 - Query for headings inside `.sr-only` section (these are expected)
 - Query for chessboard container correctly after structure change
 - Verify SEO content exists (new acceptance criteria)
@@ -92,11 +102,13 @@ Tests expect "no headings" but SEO content section (added in `seo-technical-impr
 **Status:** ⚠️ Referenced in code but files don't exist
 
 **Impact:**
+
 - Social shares (Twitter, Discord, Slack) show broken image
 - PWA install shows broken icon in "Add to Home Screen" prompt
 - Lighthouse PWA audit fails on icon requirement
 
 **Evidence:**
+
 - [app/layout.tsx#L10](../../app/layout.tsx#L10) references `/og.png` in OpenGraph tags
 - [public/manifest.json#L9-L16](../../public/manifest.json#L9-L16) references `/icon-192.png` and `/icon-512.png`
 - Files don't exist: checked `public/` directory
@@ -110,15 +122,15 @@ Tests expect "no headings" but SEO content section (added in `seo-technical-impr
 
 Checked all completed tickets in `work/done/` against implementation:
 
-| Ticket | Status | Notes |
-|--------|--------|-------|
-| [offline-chess-board.md](../../work/done/offline-chess-board.md) | ✅ Complete | All criteria met, gameplay works |
-| [google-ads-sidebar-desktop.md](../../work/done/google-ads-sidebar-desktop.md) | ✅ Complete | Layout correct, responsive classes correct |
-| [google-analytics-4-integration.md](../../work/done/google-analytics-4-integration.md) | ✅ Complete | Events fire correctly (verified in code) |
-| [pwa-manifest.md](../../work/done/pwa-manifest.md) | ⚠️ Partial | Manifest correct, but icons missing |
-| [seo-meta-tags.md](../../work/done/seo-meta-tags.md) | ⚠️ Partial | Meta tags correct, but OG image missing |
-| [seo-technical-improvements.md](../../work/done/seo-technical-improvements.md) | ✅ Complete | All criteria met, tests need update |
-| [content-page-how-to-play.md](../../work/done/content-page-how-to-play.md) | ✅ Complete | Page exists, content on-brand, CTA present |
+| Ticket                                                                                 | Status      | Notes                                      |
+| -------------------------------------------------------------------------------------- | ----------- | ------------------------------------------ |
+| [offline-chess-board.md](../../work/done/offline-chess-board.md)                       | ✅ Complete | All criteria met, gameplay works           |
+| [google-ads-sidebar-desktop.md](../../work/done/google-ads-sidebar-desktop.md)         | ✅ Complete | Layout correct, responsive classes correct |
+| [google-analytics-4-integration.md](../../work/done/google-analytics-4-integration.md) | ✅ Complete | Events fire correctly (verified in code)   |
+| [pwa-manifest.md](../../work/done/pwa-manifest.md)                                     | ⚠️ Partial  | Manifest correct, but icons missing        |
+| [seo-meta-tags.md](../../work/done/seo-meta-tags.md)                                   | ⚠️ Partial  | Meta tags correct, but OG image missing    |
+| [seo-technical-improvements.md](../../work/done/seo-technical-improvements.md)         | ✅ Complete | All criteria met, tests need update        |
+| [content-page-how-to-play.md](../../work/done/content-page-how-to-play.md)             | ✅ Complete | Page exists, content on-brand, CTA present |
 
 **Summary:** 5/7 tickets fully complete. 2 tickets blocked by missing design assets only.
 
@@ -133,6 +145,7 @@ Based on your competitive analysis spike and market positioning, here are high-i
 **Problem:** Users lose game state on accidental refresh/close. No way to recover.
 
 **High-Value Features:**
+
 1. **Game persistence (localStorage)** — Resume interrupted games
    - **Impact:** Prevents frustration, increases session completion
    - **Effort:** Low (1-2 hours) — store FEN string + move history in localStorage
@@ -153,6 +166,7 @@ Based on your competitive analysis spike and market positioning, here are high-i
 **Problem:** One-size-fits-all board appearance may not suit all users.
 
 **High-Value Features:**
+
 1. **Board themes** — Light, dark, wood options
    - **Impact:** User preference increases time on site
    - **Effort:** Medium (3-4 hours) — react-chessboard has theme support
@@ -168,6 +182,7 @@ Based on your competitive analysis spike and market positioning, here are high-i
 **Problem:** No built-in viral mechanics. Users can't share interesting games.
 
 **High-Value Features:**
+
 1. **Export PGN** — Download game notation for analysis elsewhere
    - **Impact:** Power users can save memorable games
    - **Effort:** Low (1-2 hours) — chess.js has `.pgn()` method
@@ -188,6 +203,7 @@ Based on your competitive analysis spike and market positioning, here are high-i
 **Problem:** Limited organic traffic channels beyond SEO.
 
 **High-Value Tactics:**
+
 1. **Daily chess puzzle** — New puzzle every day, shareable
    - **Impact:** Habit formation (return visitors), social shares
    - **Effort:** High (12+ hours) — puzzle database + solve UI + scheduling
@@ -210,12 +226,14 @@ Based on your competitive analysis spike and market positioning, here are high-i
 ## 🎯 Recommended Roadmap
 
 ### Phase 1: Fix Blockers (1-2 days)
+
 1. ✅ Fix test failures in `app/page.test.tsx`
 2. ✅ Create design assets (OG image, PWA icons)
 3. ✅ Set up environment variables (GA4, AdSense)
 4. ✅ Deploy to production
 
 ### Phase 2: Quick Wins (1 week)
+
 1. 🚀 Add move highlighting (1 hour)
 2. 🚀 Add undo move (2 hours)
 3. 🚀 Add game persistence (2 hours)
@@ -224,6 +242,7 @@ Based on your competitive analysis spike and market positioning, here are high-i
 **Impact:** Prevents user frustration, increases completion rate, adds power user feature
 
 ### Phase 3: Engagement (2-3 weeks)
+
 1. 📈 Add board themes (4 hours)
 2. 📈 Add optional game clock (6 hours)
 3. 📈 Add more content pages (`/for-kids`, `/for-teachers`) (6 hours)
@@ -231,6 +250,7 @@ Based on your competitive analysis spike and market positioning, here are high-i
 **Impact:** User personalization, expanded use cases, SEO traffic growth
 
 ### Phase 4: Growth Experiments (1-2 months)
+
 1. 🎲 Launch daily chess puzzle feature (12+ hours)
 2. 🎲 Create famous games library (12+ hours)
 3. 🎲 Build embed widget (6 hours)
@@ -243,14 +263,14 @@ Based on your competitive analysis spike and market positioning, here are high-i
 
 Once GA4 is live, monitor these (from competitor analysis):
 
-| Metric | Target | Current | Notes |
-|--------|--------|---------|-------|
-| **Time to first move** | <3s | Unknown | Measure page load → first valid move |
-| **Mobile traffic %** | >60% | Unknown | Mobile-first positioning validation |
-| **Bounce rate** | <30% | Unknown | Low bounce = users engage with board |
-| **Session duration** | >5min | Unknown | Average chess game duration |
-| **Return visitors** | >20% | Unknown | Retention indicator |
-| **Move count per session** | >10 | Unknown | Engagement depth |
+| Metric                     | Target | Current | Notes                                |
+| -------------------------- | ------ | ------- | ------------------------------------ |
+| **Time to first move**     | <3s    | Unknown | Measure page load → first valid move |
+| **Mobile traffic %**       | >60%   | Unknown | Mobile-first positioning validation  |
+| **Bounce rate**            | <30%   | Unknown | Low bounce = users engage with board |
+| **Session duration**       | >5min  | Unknown | Average chess game duration          |
+| **Return visitors**        | >20%   | Unknown | Retention indicator                  |
+| **Move count per session** | >10    | Unknown | Engagement depth                     |
 
 ---
 
@@ -263,6 +283,7 @@ Once GA4 is live, monitor these (from competitor analysis):
 **Biggest Opportunity?** **Game persistence + undo move** — these prevent user frustration and are table stakes for retention. Add these before scaling traffic.
 
 **Strategic Direction?** Your competitive analysis nailed it. Maintain simplicity while adding:
+
 - **Retention features** (persistence, undo, themes) to keep users
 - **Content pages** (for-kids, for-teachers, for-travelers) to drive SEO traffic
 - **Shareability** (PGN export, position links) to enable organic growth

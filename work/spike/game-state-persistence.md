@@ -9,6 +9,7 @@
 ## Problem Statement
 
 Currently, game state resets on page reload. Users lose their game if they:
+
 - Accidentally refresh the browser
 - Navigate away and return
 - Close the tab and reopen
@@ -21,11 +22,13 @@ Currently, game state resets on page reload. Users lose their game if they:
 ### Current State
 
 **Game state stored in React useState:**
+
 ```typescript
-const [game, setGame] = useState(new Chess())
+const [game, setGame] = useState(new Chess());
 ```
 
 **Game object contains:**
+
 - Board position (FEN notation)
 - Move history
 - Turn order (white/black)
@@ -38,42 +41,44 @@ const [game, setGame] = useState(new Chess())
 
 ### Browser Storage API Comparison
 
-| Criteria | sessionStorage | localStorage | IndexedDB |
-|----------|----------------|--------------|-----------|
-| **Persistence** | Tab/window lifetime only | Survives browser restarts | Survives browser restarts |
-| **Capacity** | ~5–10 MB | ~5–10 MB | ~50 MB+ (quota-based) |
-| **API Complexity** | Simple (sync) | Simple (sync) | Complex (async, transactions) |
-| **Use Case Fit** | Resume after accidental refresh | Resume after browser restart | Large datasets, structured queries |
-| **Data Format** | String only | String only | Any structured data |
-| **Browser Support** | Universal (IE8+) | Universal (IE8+) | Modern browsers (IE10+) |
-| **Performance** | Sync — no overhead | Sync — no overhead | Async — negligible overhead for small data |
-| **Privacy/Incognito** | Works normally | **May be disabled/cleared** | **May be disabled/cleared** |
-| **Tab Independence** | Each tab isolated | Shared across tabs | Shared across tabs |
+| Criteria              | sessionStorage                  | localStorage                 | IndexedDB                                  |
+| --------------------- | ------------------------------- | ---------------------------- | ------------------------------------------ |
+| **Persistence**       | Tab/window lifetime only        | Survives browser restarts    | Survives browser restarts                  |
+| **Capacity**          | ~5–10 MB                        | ~5–10 MB                     | ~50 MB+ (quota-based)                      |
+| **API Complexity**    | Simple (sync)                   | Simple (sync)                | Complex (async, transactions)              |
+| **Use Case Fit**      | Resume after accidental refresh | Resume after browser restart | Large datasets, structured queries         |
+| **Data Format**       | String only                     | String only                  | Any structured data                        |
+| **Browser Support**   | Universal (IE8+)                | Universal (IE8+)             | Modern browsers (IE10+)                    |
+| **Performance**       | Sync — no overhead              | Sync — no overhead           | Async — negligible overhead for small data |
+| **Privacy/Incognito** | Works normally                  | **May be disabled/cleared**  | **May be disabled/cleared**                |
+| **Tab Independence**  | Each tab isolated               | Shared across tabs           | Shared across tabs                         |
 
 ### Approach Comparison
 
-| Criteria | Option A: sessionStorage Only | Option B: localStorage Only | Option C: Both (Hybrid) |
-|----------|-------------------------------|----------------------------|------------------------|
-| **Complexity** | Low | Low | Medium |
-| **Resume after refresh** | ✅ Yes | ✅ Yes | ✅ Yes |
-| **Resume after browser restart** | ❌ No | ✅ Yes | ✅ Yes |
-| **Resume in new tab** | ❌ No | ✅ Yes | ✅ Yes |
-| **Privacy mode resilience** | ✅ Always works | ⚠️ May be disabled | ⚠️ Partial (sessionStorage fallback) |
-| **Multi-game support** | ✅ Each tab independent | ❌ One game globally | ⚠️ Requires UX for "which game?" |
-| **Implementation size** | ~30 lines | ~30 lines | ~60 lines |
-| **Risk of data loss** | High (tab close) | Low | Low |
+| Criteria                         | Option A: sessionStorage Only | Option B: localStorage Only | Option C: Both (Hybrid)              |
+| -------------------------------- | ----------------------------- | --------------------------- | ------------------------------------ |
+| **Complexity**                   | Low                           | Low                         | Medium                               |
+| **Resume after refresh**         | ✅ Yes                        | ✅ Yes                      | ✅ Yes                               |
+| **Resume after browser restart** | ❌ No                         | ✅ Yes                      | ✅ Yes                               |
+| **Resume in new tab**            | ❌ No                         | ✅ Yes                      | ✅ Yes                               |
+| **Privacy mode resilience**      | ✅ Always works               | ⚠️ May be disabled          | ⚠️ Partial (sessionStorage fallback) |
+| **Multi-game support**           | ✅ Each tab independent       | ❌ One game globally        | ⚠️ Requires UX for "which game?"     |
+| **Implementation size**          | ~30 lines                     | ~30 lines                   | ~60 lines                            |
+| **Risk of data loss**            | High (tab close)              | Low                         | Low                                  |
 
 ### Recommendation
 
 **Option C: Hybrid (sessionStorage primary, localStorage backup)**
 
 **Why:**
+
 1. **sessionStorage** auto-saves every move — zero UX friction, works in privacy mode
 2. **localStorage** persists last game position on tab close for "resume" UX on return
 3. Handles both accidental refresh (common) and intentional return (valuable)
 4. Falls back gracefully when localStorage unavailable (incognito mode)
 
 **UX Flow:**
+
 1. On mount: check `localStorage` for saved game
    - If found → show "Resume last game?" prompt (2 buttons: Resume | New Game)
    - If not found → start new game
@@ -81,6 +86,7 @@ const [game, setGame] = useState(new Chess())
 3. On unmount/tab close: copy `sessionStorage` → `localStorage` (preserve last position)
 
 **Storage keys:**
+
 - `sessionStorage.chess_game_fen` — current tab's active game
 - `sessionStorage.chess_game_timestamp` — last move timestamp
 - `localStorage.chess_game_last_fen` — most recent game position across all sessions
@@ -103,6 +109,7 @@ useEffect → sessionStorage.setItem('chess_game_fen', game.fen())
 ```
 
 **On mount:**
+
 ```
 1. Check localStorage for chess_game_last_fen
 2. If exists → show modal: "Resume game from [timestamp]?" | "Start new game"
@@ -113,12 +120,12 @@ useEffect → sessionStorage.setItem('chess_game_fen', game.fen())
 
 ### Affected Files / Areas
 
-| File | Change | Reason |
-|------|--------|--------|
-| `app/page.tsx` | Add `useEffect` hooks for storage sync | Auto-save on move |
-| `app/page.tsx` | Add mount logic to check localStorage | Resume game prompt |
-| `app/page.tsx` | Add "Resume" modal/prompt component | UX for continue vs new |
-| `app/page.tsx` | Add beforeunload listener (optional) | Warn on accidental close mid-game |
+| File           | Change                                 | Reason                            |
+| -------------- | -------------------------------------- | --------------------------------- |
+| `app/page.tsx` | Add `useEffect` hooks for storage sync | Auto-save on move                 |
+| `app/page.tsx` | Add mount logic to check localStorage  | Resume game prompt                |
+| `app/page.tsx` | Add "Resume" modal/prompt component    | UX for continue vs new            |
+| `app/page.tsx` | Add beforeunload listener (optional)   | Warn on accidental close mid-game |
 
 **No new files needed** — all logic fits in existing `page.tsx`.
 
@@ -127,55 +134,60 @@ useEffect → sessionStorage.setItem('chess_game_fen', game.fen())
 ### Code Sketch (Implementation Guide)
 
 **Storage utilities:**
+
 ```typescript
 // Save to sessionStorage on every move
 useEffect(() => {
-  if (typeof window === 'undefined') return
+  if (typeof window === "undefined") return;
   try {
-    sessionStorage.setItem('chess_game_fen', game.fen())
-    sessionStorage.setItem('chess_game_timestamp', Date.now().toString())
+    sessionStorage.setItem("chess_game_fen", game.fen());
+    sessionStorage.setItem("chess_game_timestamp", Date.now().toString());
   } catch (e) {
     // Ignore quota/privacy errors
   }
-}, [game])
+}, [game]);
 
 // On mount: check for saved game
 useEffect(() => {
-  if (typeof window === 'undefined') return
-  
-  const savedFen = localStorage.getItem('chess_game_last_fen')
-  const savedTimestamp = localStorage.getItem('chess_game_last_timestamp')
-  
+  if (typeof window === "undefined") return;
+
+  const savedFen = localStorage.getItem("chess_game_last_fen");
+  const savedTimestamp = localStorage.getItem("chess_game_last_timestamp");
+
   if (savedFen) {
     // Show resume modal (implement in Step 2)
-    setShowResumeModal(true)
-    setSavedGame({ fen: savedFen, timestamp: savedTimestamp })
+    setShowResumeModal(true);
+    setSavedGame({ fen: savedFen, timestamp: savedTimestamp });
   }
-}, [])
+}, []);
 
 // On tab close: persist to localStorage
 useEffect(() => {
-  if (typeof window === 'undefined') return
-  
+  if (typeof window === "undefined") return;
+
   const handleBeforeUnload = () => {
     try {
-      const currentFen = sessionStorage.getItem('chess_game_fen')
-      const currentTimestamp = sessionStorage.getItem('chess_game_timestamp')
+      const currentFen = sessionStorage.getItem("chess_game_fen");
+      const currentTimestamp = sessionStorage.getItem("chess_game_timestamp");
       if (currentFen) {
-        localStorage.setItem('chess_game_last_fen', currentFen)
-        localStorage.setItem('chess_game_last_timestamp', currentTimestamp || Date.now().toString())
+        localStorage.setItem("chess_game_last_fen", currentFen);
+        localStorage.setItem(
+          "chess_game_last_timestamp",
+          currentTimestamp || Date.now().toString(),
+        );
       }
     } catch (e) {
       // Ignore errors
     }
-  }
-  
-  window.addEventListener('beforeunload', handleBeforeUnload)
-  return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-}, [])
+  };
+
+  window.addEventListener("beforeunload", handleBeforeUnload);
+  return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+}, []);
 ```
 
 **Resume modal:**
+
 ```typescript
 {showResumeModal && (
   <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -199,17 +211,18 @@ useEffect(() => {
 
 ## Risks & Unknowns
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| **localStorage quota exceeded** | Low | Low | Try/catch blocks, graceful degradation to sessionStorage only |
-| **User in incognito mode** | Medium | Medium | sessionStorage still works — only lose game on tab close (acceptable) |
-| **User plays multiple simultaneous games in different tabs** | Low | Medium | Currently unsupported — each tab overwrites localStorage. Future: array of saved games with unique IDs. |
-| **Corrupted FEN string** | Very Low | Medium | Validate FEN on load with `try { new Chess(fen) } catch { start new game }` |
-| **User expects undo/redo** | Medium | Low | Out of scope for this spike — different feature. Current: only resume from last position. |
-| **Sync between devices** | Low | High | Not possible with Web Storage API — would require backend. Out of scope. |
-| **Ad blocker interference** | Very Low | Very Low | Web Storage API unaffected by ad blockers |
+| Risk                                                         | Likelihood | Impact   | Mitigation                                                                                              |
+| ------------------------------------------------------------ | ---------- | -------- | ------------------------------------------------------------------------------------------------------- |
+| **localStorage quota exceeded**                              | Low        | Low      | Try/catch blocks, graceful degradation to sessionStorage only                                           |
+| **User in incognito mode**                                   | Medium     | Medium   | sessionStorage still works — only lose game on tab close (acceptable)                                   |
+| **User plays multiple simultaneous games in different tabs** | Low        | Medium   | Currently unsupported — each tab overwrites localStorage. Future: array of saved games with unique IDs. |
+| **Corrupted FEN string**                                     | Very Low   | Medium   | Validate FEN on load with `try { new Chess(fen) } catch { start new game }`                             |
+| **User expects undo/redo**                                   | Medium     | Low      | Out of scope for this spike — different feature. Current: only resume from last position.               |
+| **Sync between devices**                                     | Low        | High     | Not possible with Web Storage API — would require backend. Out of scope.                                |
+| **Ad blocker interference**                                  | Very Low   | Very Low | Web Storage API unaffected by ad blockers                                                               |
 
 **Unknown:** User expectation — do users want automatic resume or explicit save/load buttons?
+
 - **Research needed:** Quick user survey or A/B test
 - **Assumption for MVP:** Automatic resume is lower friction (follows mobile game UX patterns)
 
@@ -218,6 +231,7 @@ useEffect(() => {
 > Files from `knowledge/` that support ticket writing and implementation:
 
 No `knowledge/` folder exists in workspace. Applicable patterns:
+
 - **React hooks:** `useState`, `useEffect` for storage sync
 - **Next.js client components:** `'use client'` directive already present in `app/page.tsx`
 - **Error handling:** Try/catch for Web Storage API (may throw in incognito/quota scenarios)
@@ -227,11 +241,13 @@ No `knowledge/` folder exists in workspace. Applicable patterns:
 > Requirements from instruction files that apply to this feature:
 
 ### Security (`security.instructions.md`)
+
 - ✅ No sensitive data in storage — only FEN notation (public board position)
 - ✅ No user-controlled data stored — FEN validated by chess.js before saving
 - ⚠️ No XSS risk — FEN is consumed by chess.js, not rendered to DOM directly
 
 ### Testing (`testing-standards.instructions.md`)
+
 - **Unit tests:** Mock `localStorage` and `sessionStorage` (jsdom provides these)
 - **E2E tests:** Playwright can manipulate storage via `page.evaluate()`
 - **Edge cases to test:**
@@ -241,11 +257,13 @@ No `knowledge/` folder exists in workspace. Applicable patterns:
   - sessionStorage persists within tab lifecycle
 
 ### Performance
+
 - **Impact:** Negligible — FEN string ~100 bytes, sync operations <1ms
 - **Lighthouse:** No CLS, no blocking, no network requests
 - **Core Web Vitals:** No impact (storage APIs are sync, non-rendering)
 
 ### Accessibility (WCAG 2.1 AA)
+
 - Resume modal must have:
   - Keyboard navigation (Tab, Enter, Escape)
   - Focus trap while open
@@ -260,18 +278,18 @@ No `knowledge/` folder exists in workspace. Applicable patterns:
 
 - **Scope:** Add `useEffect` to save game FEN to `sessionStorage` on every move
 - **Files:** `app/page.tsx` (modify)
-- **Key outcomes:** 
+- **Key outcomes:**
   - Game persists across accidental page refresh
   - No UX changes (silent background save)
   - Try/catch handles quota errors gracefully
 
 ### Ticket 2: Resume Modal & localStorage Integration
 
-- **Scope:** 
+- **Scope:**
   - Check `localStorage` on mount for saved game
   - Show modal if saved game exists: "Resume" vs "New Game"
   - On tab close, copy `sessionStorage` → `localStorage`
-- **Files:** 
+- **Files:**
   - `app/page.tsx` (modify — add modal JSX, resume logic)
   - Optional: Extract `<ResumeModal>` to `components/ResumeModal.tsx` if grows large
 - **Key outcomes:**
@@ -281,7 +299,7 @@ No `knowledge/` folder exists in workspace. Applicable patterns:
 
 ### Ticket 3: FEN Validation & Error Handling
 
-- **Scope:** 
+- **Scope:**
   - Validate loaded FEN with `try { new Chess(fen) } catch { ... }`
   - Clear corrupted data from storage
   - Log errors (console.warn) for debugging
@@ -292,11 +310,11 @@ No `knowledge/` folder exists in workspace. Applicable patterns:
 
 ### Ticket 4: Testing Coverage
 
-- **Scope:** 
+- **Scope:**
   - Unit tests: Mock storage APIs, test save/load/resume flows
   - Test edge cases: corrupted FEN, quota errors, incognito mode
   - E2E test: Playwright simulates refresh and verifies game resumes
-- **Files:** 
+- **Files:**
   - `app/page.test.tsx` (expand existing tests)
   - `tests/e2e/game-persistence.spec.ts` (new — if E2E tests exist)
 - **Key outcomes:**

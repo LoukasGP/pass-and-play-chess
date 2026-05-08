@@ -14,10 +14,10 @@ Enhance SEO metadata for better search rankings and social sharing. Target keywo
 
 ## 📁 Affected Files
 
-| Action | Path             | Role                                  |
-| ------ | ---------------- | ------------------------------------- |
-| Modify | `app/layout.tsx` | Enhance metadata object with OG tags  |
-| Create | `public/og.png`  | Open Graph image for social sharing   |
+| Action | Path             | Role                                 |
+| ------ | ---------------- | ------------------------------------ |
+| Modify | `app/layout.tsx` | Enhance metadata object with OG tags |
+| Create | `public/og.png`  | Open Graph image for social sharing  |
 
 ## ✅ Acceptance Criteria
 
@@ -42,6 +42,7 @@ npm run build
 ```
 
 Manual verification:
+
 1. Run `npm run dev`
 2. View page source → verify `<meta>` tags present
 3. Test with https://www.opengraph.xyz/ or https://cards-dev.twitter.com/validator

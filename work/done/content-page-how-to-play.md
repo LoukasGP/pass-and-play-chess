@@ -14,9 +14,9 @@ Create `/how-to-play` content page to target "how to play chess offline" and rel
 
 ## 📁 Affected Files
 
-| Action | Path                         | Role                                     |
-| ------ | ---------------------------- | ---------------------------------------- |
-| Create | `app/how-to-play/page.tsx`   | New route with tutorial content and CTA  |
+| Action | Path                       | Role                                    |
+| ------ | -------------------------- | --------------------------------------- |
+| Create | `app/how-to-play/page.tsx` | New route with tutorial content and CTA |
 
 ## ✅ Acceptance Criteria
 

@@ -9,6 +9,7 @@
 ## 🎯 Problem Statement
 
 Simple pass-and-play chess app is functional. How do we get users to discover it, use it, and share it when:
+
 - **Crowded market**: chess.com (100M+ users), lichess.org (free, open-source, feature-rich) dominate
 - **Niche use case**: Pass-and-play is small subset of chess players (most play online)
 - **No network effects**: Single-device = no viral loop from multiplayer matching
@@ -21,6 +22,7 @@ Simple pass-and-play chess app is functional. How do we get users to discover it
 ## 🔍 Current State
 
 **Product:**
+
 - Fullscreen offline chess board
 - Drag-and-drop piece movement
 - Legal move validation via chess.js
@@ -35,6 +37,7 @@ Simple pass-and-play chess app is functional. How do we get users to discover it
 ✅ Distraction-free (vs. chess.com's popups/ads)
 
 **Target Users:**
+
 - People in offline/low-connectivity situations (flights, remote areas)
 - Parents teaching kids chess without screen distractions
 - Chess clubs/schools wanting ad-free experience
@@ -45,12 +48,12 @@ Simple pass-and-play chess app is functional. How do we get users to discover it
 
 ## 📊 Competitive Landscape
 
-| Product | Strengths | Weaknesses (Our Opportunity) |
-|---------|-----------|------------------------------|
-| **chess.com** | 100M+ users, rich features, lessons, tournaments | Bloated UI, ads, requires account, distracting |
-| **lichess.org** | Free, open-source, no ads, strong community | Requires internet, complex UI for casual users |
-| **Physical boards** | Tangible, no battery, social | Not portable, need to own/buy pieces |
-| **Other offline apps** | Exist in app stores | Often have ads, poor UX, hidden in search results |
+| Product                | Strengths                                        | Weaknesses (Our Opportunity)                      |
+| ---------------------- | ------------------------------------------------ | ------------------------------------------------- |
+| **chess.com**          | 100M+ users, rich features, lessons, tournaments | Bloated UI, ads, requires account, distracting    |
+| **lichess.org**        | Free, open-source, no ads, strong community      | Requires internet, complex UI for casual users    |
+| **Physical boards**    | Tangible, no battery, social                     | Not portable, need to own/buy pieces              |
+| **Other offline apps** | Exist in app stores                              | Often have ads, poor UX, hidden in search results |
 
 **Gap**: No well-known, ultra-simple, web-based, offline-first, ad-free pass-and-play option.
 
@@ -61,16 +64,19 @@ Simple pass-and-play chess app is functional. How do we get users to discover it
 ### Approach 1: SEO + Content Marketing
 
 **What:**
+
 - Create blog content: "10 Best Offline Chess Apps", "How to Play Chess Offline on a Plane", "Teach Kids Chess Without Distractions"
 - Optimize for keywords: "offline chess", "pass and play chess", "local chess game", "chess no account"
 - Embed chessboard on content pages (interactive puzzles)
 
 **Pros:**
+
 - Evergreen traffic (compounds over time)
 - Targets high-intent searches ("offline chess" = user needs what we offer)
 - Low cost (just content creation)
 
 **Cons:**
+
 - Slow (6–12 months to rank)
 - Competitive keywords (chess.com, lichess dominate)
 - Requires consistent content production
@@ -84,17 +90,20 @@ Simple pass-and-play chess app is functional. How do we get users to discover it
 ### Approach 2: Product Hunt / Hacker News Launch
 
 **What:**
+
 - Launch on Product Hunt as "The simplest offline chess board on the web"
 - Post on Hacker News: "Show HN: Offline pass-and-play chess in 100 lines of code"
 - Emphasize simplicity, privacy, no-account, offline-first
 
 **Pros:**
+
 - Fast feedback from tech-savvy early adopters
 - One-time spike can bring 5K–50K visitors in 1–2 days
 - Credibility boost ("Featured on Product Hunt")
 - Great for developer/tech audience
 
 **Cons:**
+
 - One-time spike (not sustainable traffic)
 - Tech audience may not be core chess players
 - Requires polished product and story
@@ -108,16 +117,19 @@ Simple pass-and-play chess app is functional. How do we get users to discover it
 ### Approach 3: Reddit/Forum Seeding
 
 **What:**
+
 - Post in r/chess, r/AnarchyChess, r/webdev, r/SideProject
 - Position as: "Built a distraction-free offline chess board—feedback?"
 - Engage authentically, no spammy promotion
 
 **Pros:**
+
 - Direct access to chess enthusiasts
 - Immediate feedback on product-market fit
 - Low cost (just time)
 
 **Cons:**
+
 - Reddit can be hostile to self-promotion
 - Requires authentic engagement (not just "check out my app")
 - Limited reach per post
@@ -131,6 +143,7 @@ Simple pass-and-play chess app is functional. How do we get users to discover it
 ### Approach 4: Niche Targeting (Schools, Chess Clubs, Cafes)
 
 **What:**
+
 - Create landing pages targeting specific niches:
   - "Offline Chess for Classrooms" → schools/teachers
   - "Chess Board for Cafes" → coffee shops with board game nights
@@ -138,11 +151,13 @@ Simple pass-and-play chess app is functional. How do we get users to discover it
 - Outreach to chess clubs, homeschool communities, educational blogs
 
 **Pros:**
+
 - Addresses specific pain points (no distractions for kids, offline for planes)
 - Higher conversion (niche = clearer value prop)
 - Word-of-mouth in tight communities
 
 **Cons:**
+
 - Requires multiple landing pages and messaging
 - Outreach is time-intensive
 - Smaller addressable market per niche
@@ -157,17 +172,20 @@ Simple pass-and-play chess app is functional. How do we get users to discover it
 
 **What:**
 Add features that encourage sharing:
+
 - **Game replay links**: "Share this game" → generates shareable URL with move history
 - **QR code for rematch**: Scan to continue game on another device
 - **Famous games library**: Play through Kasparov vs. Deep Blue (shareable)
 - **Daily puzzle**: New puzzle every day → reason to return and share
 
 **Pros:**
+
 - Viral loop built into product (users become distributors)
 - Sticky (daily puzzle = habit formation)
 - Differentiates from pure "offline board" competitors
 
 **Cons:**
+
 - Requires feature development (not just marketing)
 - Adds complexity (contradicts "ultra-simple" value prop)
 - Viral coefficient likely low for offline use case
@@ -181,13 +199,17 @@ Add features that encourage sharing:
 ## 🎯 Recommendation
 
 ### Phase 1 (Week 1): Quick Wins
+
 **Launch on Product Hunt + Hacker News + Reddit**
+
 - **Why**: Immediate feedback, low effort, validates demand
 - **Goal**: 5K–10K visitors, 100–200 retained users, qualitative feedback
 - **Success metric**: >100 upvotes on Product Hunt OR >50 HN points OR >500 Reddit upvotes
 
 ### Phase 2 (Months 1–3): Sustainable Growth
+
 **SEO + Content Marketing**
+
 - **Why**: Compounds over time, targets high-intent searches
 - **Tactics**:
   - 4–8 blog posts: "Best Offline Chess Apps", "Chess for Kids Without Ads", "Play Chess on a Plane"
@@ -197,7 +219,9 @@ Add features that encourage sharing:
 - **Success metric**: 3+ posts ranking on page 1 for target keywords
 
 ### Phase 3 (Months 2–4): Niche Outreach
+
 **Schools + Chess Clubs + Homeschool Communities**
+
 - **Why**: High conversion, word-of-mouth, strong retention
 - **Tactics**:
   - Create "Chess for Classrooms" landing page
@@ -207,7 +231,9 @@ Add features that encourage sharing:
 - **Success metric**: 5+ blog mentions or forum links
 
 ### Phase 4 (Months 4–6): Product-Led Growth (Optional)
+
 **Daily Puzzles + Game Replays**
+
 - **Why**: Habit formation, shareability, differentiation
 - **Tactics**:
   - Daily chess puzzle (PGN-based, no backend needed)
@@ -219,24 +245,26 @@ Add features that encourage sharing:
 
 ## ⚠️ Risks & Unknowns
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| **Crowded market** — users default to chess.com/lichess | High | High | Emphasize unique value props: offline, no-account, ad-free, simple |
-| **Low demand for pass-and-play** — most people play online | Medium | High | Validate with Product Hunt/Reddit launch before investing in SEO |
-| **Hard to monetize** — users expect free chess | High | Medium | Start free, consider optional "buy me a coffee" or premium themes later |
-| **SEO takes 6–12 months** — no immediate results | High | Medium | Launch on Product Hunt/HN first for fast feedback |
-| **Reddit hostile to self-promotion** — posts get downvoted/removed | Medium | Low | Engage authentically, ask for feedback not clicks |
+| Risk                                                               | Likelihood | Impact | Mitigation                                                              |
+| ------------------------------------------------------------------ | ---------- | ------ | ----------------------------------------------------------------------- |
+| **Crowded market** — users default to chess.com/lichess            | High       | High   | Emphasize unique value props: offline, no-account, ad-free, simple      |
+| **Low demand for pass-and-play** — most people play online         | Medium     | High   | Validate with Product Hunt/Reddit launch before investing in SEO        |
+| **Hard to monetize** — users expect free chess                     | High       | Medium | Start free, consider optional "buy me a coffee" or premium themes later |
+| **SEO takes 6–12 months** — no immediate results                   | High       | Medium | Launch on Product Hunt/HN first for fast feedback                       |
+| **Reddit hostile to self-promotion** — posts get downvoted/removed | Medium     | Low    | Engage authentically, ask for feedback not clicks                       |
 
 ---
 
 ## 📏 Success Metrics
 
 ### Leading Indicators (Week 1–4):
+
 - [ ] 5K+ visitors from Product Hunt/HN/Reddit launch
 - [ ] 100+ users return 2+ times
 - [ ] Qualitative feedback on 3+ forums/communities
 
 ### Lagging Indicators (Months 3–6):
+
 - [ ] 1K+ monthly organic visitors (SEO)
 - [ ] 3+ blog posts rank on page 1 for target keywords
 - [ ] 5+ external mentions or backlinks
@@ -247,12 +275,14 @@ Add features that encourage sharing:
 ## 📦 Deliverables
 
 If we proceed with Phase 1 (Quick Wins):
+
 1. **Product Hunt launch page** — tagline, screenshots, demo video
 2. **Hacker News post** — "Show HN: Offline pass-and-play chess board"
 3. **Reddit posts** — r/chess, r/webdev, r/SideProject (authentic, feedback-focused)
 4. **Analytics setup** — Plausible or simple privacy-respecting analytics to track visits, retention
 
 If we proceed with Phase 2 (SEO):
+
 1. **4–8 blog posts** with embedded chessboard demos
 2. **Meta tags + structured data** for search visibility
 3. **Sitemap + robots.txt** optimized for crawling

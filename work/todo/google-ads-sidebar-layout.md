@@ -31,7 +31,7 @@ Add non-intrusive Google AdSense ads on left and right sidebars for desktop user
 ```typescript
 interface GoogleAdProps {
   readonly slot: string; // AdSense ad slot ID
-  readonly format?: 'vertical' | 'rectangle' | 'auto';
+  readonly format?: "vertical" | "rectangle" | "auto";
   readonly className?: string;
 }
 ```
@@ -41,6 +41,7 @@ interface GoogleAdProps {
 ### Step 1: Create GoogleAd Component
 
 Create `components/GoogleAd.tsx` with:
+
 - Accept `slot`, `format`, `className` props
 - Render `<ins className="adsbygoogle">` tag with AdSense data attributes
 - Use `useEffect` to call `(adsbygoogle = window.adsbygoogle || []).push({})` after mount
@@ -50,6 +51,7 @@ Create `components/GoogleAd.tsx` with:
 ### Step 2: Update Page Layout
 
 Modify `app/page.tsx`:
+
 - Replace current centered div with 3-column flexbox container
 - Left column: `<GoogleAd slot="LEFT_SLOT" className="hidden lg:block w-[160px]" />`
 - Center column: existing chess board (keep current sizing logic)
@@ -59,23 +61,25 @@ Modify `app/page.tsx`:
 ### Step 3: Handle AdSense Script Loading
 
 Verify `app/layout.tsx` AdSense script:
+
 - Already present, loads conditionally based on `NEXT_PUBLIC_ADSENSE_CLIENT_ID`
 - No changes needed unless script strategy adjustment required
 
 ### Step 4: Responsive Styling
 
 Use Tailwind responsive classes:
+
 - Ads: `hidden lg:block` (only show ≥1024px)
 - Board container: remains fullscreen on mobile, centered with ads on desktop
 - Test breakpoints: 320px (mobile), 768px (tablet), 1024px (desktop), 1920px (large desktop)
 
 ## 📁 Affected Files
 
-| Action | Path                     | Role                                          |
-| ------ | ------------------------ | --------------------------------------------- |
-| Create | `components/GoogleAd.tsx` | Reusable ad component wrapping AdSense `<ins>` |
-| Modify | `app/page.tsx`           | Refactor to 3-column layout with sidebars     |
-| Create | `components/GoogleAd.test.tsx` | Unit test for GoogleAd component (optional)   |
+| Action | Path                           | Role                                           |
+| ------ | ------------------------------ | ---------------------------------------------- |
+| Create | `components/GoogleAd.tsx`      | Reusable ad component wrapping AdSense `<ins>` |
+| Modify | `app/page.tsx`                 | Refactor to 3-column layout with sidebars      |
+| Create | `components/GoogleAd.test.tsx` | Unit test for GoogleAd component (optional)    |
 
 ## ✅ Acceptance Criteria
 
@@ -113,6 +117,7 @@ npm run test
 ```
 
 Manual verification:
+
 1. Set `NEXT_PUBLIC_ADSENSE_CLIENT_ID` in `.env.local`
 2. Run `npm run dev`
 3. Open at 1280px viewport → ads should show (placeholder until AdSense approved)

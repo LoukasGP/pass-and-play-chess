@@ -9,6 +9,7 @@
 ## 🎯 Goal
 
 Add game feedback features to pass-and-play chess board:
+
 1. **Sound effects** — celebrate wins/checkmate
 2. **Last move highlight** — visual indicator of previous move
 3. **Turn validation popup** — notify when wrong player attempts move
@@ -19,29 +20,29 @@ Add game feedback features to pass-and-play chess board:
 
 ### Current Implementation
 
-| Component | Library | Current State |
-|-----------|---------|---------------|
-| **Chess Logic** | chess.js v1.4.0 | ✅ Installed, handles validation |
-| **Board UI** | react-chessboard v5.10.0 | ✅ Installed, supports custom styles |
-| **Audio** | None | ❌ Not implemented |
-| **Notifications** | None | ❌ Not implemented |
-| **State Management** | React useState | Minimal (game, moveCount) |
-| **Analytics** | Google Analytics 4 | Tracks game_start, move_made events |
+| Component            | Library                  | Current State                        |
+| -------------------- | ------------------------ | ------------------------------------ |
+| **Chess Logic**      | chess.js v1.4.0          | ✅ Installed, handles validation     |
+| **Board UI**         | react-chessboard v5.10.0 | ✅ Installed, supports custom styles |
+| **Audio**            | None                     | ❌ Not implemented                   |
+| **Notifications**    | None                     | ❌ Not implemented                   |
+| **State Management** | React useState           | Minimal (game, moveCount)            |
+| **Analytics**        | Google Analytics 4       | Tracks game_start, move_made events  |
 
 ### Relevant chess.js API
 
 ```typescript
-game.isCheckmate()  // → boolean
-game.isCheck()      // → boolean  
-game.isGameOver()   // → boolean (checkmate, stalemate, draw)
-game.turn()         // → 'w' | 'b'
-game.history({ verbose: true }) // → array of move objects with from/to squares
+game.isCheckmate(); // → boolean
+game.isCheck(); // → boolean
+game.isGameOver(); // → boolean (checkmate, stalemate, draw)
+game.turn(); // → 'w' | 'b'
+game.history({ verbose: true }); // → array of move objects with from/to squares
 ```
 
 ### Relevant react-chessboard API
 
 ```typescript
-<Chessboard 
+<Chessboard
   options={{
     position: game.fen(),
     onPieceDrop: handleDrop,
@@ -72,19 +73,24 @@ game.history({ verbose: true }) // → array of move objects with from/to square
 #### Approach A: Native HTML5 Audio API
 
 **Implementation:**
+
 ```typescript
-const playSound = (type: 'move' | 'check' | 'checkmate') => {
-  const audio = new Audio(`/sounds/${type}.mp3`)
-  audio.play().catch(() => {/* browser blocked autoplay */})
-}
+const playSound = (type: "move" | "check" | "checkmate") => {
+  const audio = new Audio(`/sounds/${type}.mp3`);
+  audio.play().catch(() => {
+    /* browser blocked autoplay */
+  });
+};
 ```
 
 **Pros:**
+
 - Zero dependencies
 - Lightweight (<10KB per MP3)
 - Fast implementation
 
 **Cons:**
+
 - Verbose API for multiple sounds
 - No audio sprite support
 - Browser autoplay policies block until user interacts
@@ -92,55 +98,63 @@ const playSound = (type: 'move' | 'check' | 'checkmate') => {
 #### Approach B: howler.js Library
 
 **Implementation:**
+
 ```typescript
-import { Howl } from 'howler'
+import { Howl } from "howler";
 
 const sounds = {
-  move: new Howl({ src: ['/sounds/move.mp3'] }),
-  check: new Howl({ src: ['/sounds/check.mp3'] }),
-  checkmate: new Howl({ src: ['/sounds/checkmate.mp3'] })
-}
+  move: new Howl({ src: ["/sounds/move.mp3"] }),
+  check: new Howl({ src: ["/sounds/check.mp3"] }),
+  checkmate: new Howl({ src: ["/sounds/checkmate.mp3"] }),
+};
 
-sounds.checkmate.play()
+sounds.checkmate.play();
 ```
 
 **Pros:**
+
 - Handles browser autoplay gracefully
 - Audio sprite support (all sounds in one file)
 - Better mobile support
 - Volume/fade controls
 
 **Cons:**
+
 - +24KB gzipped bundle size
 - Overkill for 2-3 sound effects
 
 #### Approach C: react-use-audio-player
 
 **Implementation:**
-```typescript
-import { useAudioPlayer } from 'react-use-audio-player'
 
-const { play } = useAudioPlayer()
-play('/sounds/checkmate.mp3')
+```typescript
+import { useAudioPlayer } from "react-use-audio-player";
+
+const { play } = useAudioPlayer();
+play("/sounds/checkmate.mp3");
 ```
 
 **Pros:**
+
 - React-friendly hooks API
 - Handles loading states
 
 **Cons:**
+
 - +8KB bundle size
 - Still uses Web Audio API under the hood (same autoplay issues)
 
 #### Audio Assets
 
 **Sources:**
+
 - Free: [Freesound.org](https://freesound.org), [Zapsplat](https://www.zapsplat.com)
 - License: CC0 or royalty-free
 - Format: MP3 (best browser support)
 - Size target: <50KB total for all sounds
 
 **Sounds needed:**
+
 - `move.mp3` — subtle click (optional, for every move)
 - `check.mp3` — alert tone (king in check)
 - `checkmate.mp3` — victory fanfare (game over)
@@ -154,6 +168,7 @@ play('/sounds/checkmate.mp3')
 #### Approach A: react-chessboard customSquareStyles
 
 **Implementation:**
+
 ```typescript
 const [lastMove, setLastMove] = useState<{ from: string; to: string } | null>(null)
 
@@ -164,7 +179,7 @@ function onDrop({ sourceSquare, targetSquare }) {
   }
 }
 
-<Chessboard 
+<Chessboard
   options={{
     position: game.fen(),
     onPieceDrop: onDrop,
@@ -177,20 +192,22 @@ function onDrop({ sourceSquare, targetSquare }) {
 ```
 
 **Pros:**
+
 - Zero dependencies (built into react-chessboard)
 - Configurable colors
 - Clears automatically on next move
 
 **Cons:**
+
 - None — this is the standard pattern
 
 #### Styling Considerations
 
-| Color | Use Case | Contrast Ratio |
-|-------|----------|---------------|
-| Yellow (rgba(255, 255, 0, 0.4)) | Last move | 4.5:1 on light squares |
-| Green (rgba(155, 199, 0, 0.4)) | Valid move targets | Lichess pattern |
-| Red (rgba(255, 0, 0, 0.4)) | King in check | Chess.com pattern |
+| Color                           | Use Case           | Contrast Ratio         |
+| ------------------------------- | ------------------ | ---------------------- |
+| Yellow (rgba(255, 255, 0, 0.4)) | Last move          | 4.5:1 on light squares |
+| Green (rgba(155, 199, 0, 0.4))  | Valid move targets | Lichess pattern        |
+| Red (rgba(255, 0, 0, 0.4))      | King in check      | Chess.com pattern      |
 
 **Recommendation:** Yellow for last move (industry standard). Consider adding red highlight for king in check as enhancement.
 
@@ -204,15 +221,15 @@ function onDrop({ sourceSquare, targetSquare }) {
 
 ```typescript
 function onDrop({ sourceSquare, targetSquare }) {
-  const piece = game.get(sourceSquare)
-  const currentTurn = game.turn() // 'w' or 'b'
-  
+  const piece = game.get(sourceSquare);
+  const currentTurn = game.turn(); // 'w' or 'b'
+
   // Check if piece color matches current turn
   if (piece && piece.color !== currentTurn) {
-    showTurnError(currentTurn === 'w' ? 'White' : 'Black')
-    return false
+    showTurnError(currentTurn === "w" ? "White" : "Black");
+    return false;
   }
-  
+
   // ... rest of move logic ...
 }
 ```
@@ -220,16 +237,19 @@ function onDrop({ sourceSquare, targetSquare }) {
 #### Approach A: Native Browser Alert
 
 **Implementation:**
+
 ```typescript
-alert("It's White's turn!")
+alert("It's White's turn!");
 ```
 
 **Pros:**
+
 - Zero dependencies
 - Blocks interaction until dismissed
 - Instant implementation
 
 **Cons:**
+
 - Ugly, breaks UX flow
 - Not customizable
 - Violates "zero distraction" positioning
@@ -237,6 +257,7 @@ alert("It's White's turn!")
 #### Approach B: Custom Toast Component
 
 **Implementation:**
+
 ```typescript
 // components/Toast.tsx
 const Toast = ({ message, onClose }) => (
@@ -255,18 +276,21 @@ useEffect(() => {
 ```
 
 **Pros:**
+
 - No dependencies
 - Full control over styling
 - Non-blocking (auto-dismisses)
 - Matches site branding
 
 **Cons:**
+
 - Need to implement ourselves (~50 lines)
 - Accessibility requires ARIA live region
 
 #### Approach C: sonner Library
 
 **Implementation:**
+
 ```typescript
 import { toast, Toaster } from 'sonner'
 
@@ -277,35 +301,41 @@ toast.error("It's White's turn!")
 ```
 
 **Pros:**
+
 - Accessible by default (ARIA)
 - Beautiful animations
 - Stacking support (if multiple errors)
 - +4KB gzipped
 
 **Cons:**
+
 - Another dependency
 - Overkill for one message type
 
 #### Approach D: react-hot-toast
 
 **Implementation:**
-```typescript
-import toast, { Toaster } from 'react-hot-toast'
 
-toast("It's White's turn!", { icon: '♟️' })
+```typescript
+import toast, { Toaster } from "react-hot-toast";
+
+toast("It's White's turn!", { icon: "♟️" });
 ```
 
 **Pros:**
+
 - Lightweight (3.5KB gzipped)
 - Emoji support
 - Simple API
 
 **Cons:**
+
 - Similar to sonner, still a dependency
 
 #### Approach E: Inline Error Message (No Popup)
 
 **Implementation:**
+
 ```typescript
 <div className="fixed bottom-4 left-1/2 -translate-x-1/2 text-lg">
   {turnError && <span className="text-red-600 font-bold">{turnError}</span>}
@@ -313,11 +343,13 @@ toast("It's White's turn!", { icon: '♟️' })
 ```
 
 **Pros:**
+
 - Minimal, non-intrusive
 - No dependencies
 - Matches "zero distraction" ethos
 
 **Cons:**
+
 - Easy to miss if not looking at bottom
 - Needs prominent position
 
@@ -331,30 +363,31 @@ toast("It's White's turn!", { icon: '♟️' })
 
 ```typescript
 const [soundEnabled, setSoundEnabled] = useState(() => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('soundEnabled') !== 'false'
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("soundEnabled") !== "false";
   }
-  return true
-})
+  return true;
+});
 
 const toggleSound = () => {
-  const newValue = !soundEnabled
-  setSoundEnabled(newValue)
-  localStorage.setItem('soundEnabled', String(newValue))
-}
+  const newValue = !soundEnabled;
+  setSoundEnabled(newValue);
+  localStorage.setItem("soundEnabled", String(newValue));
+};
 ```
 
 **UI:** Small icon in corner (🔊 / 🔇) — only control visible on board.
 
 ### Accessibility (WCAG 2.1 AA)
 
-| Feature | Requirement | Solution |
-|---------|------------|----------|
-| **Sound effects** | 1.2.1: Audio-only content needs text alternative | Add visual indicator (toast) alongside sound |
-| **Turn popup** | 4.1.3: Status messages programmatically determined | Use `aria-live="polite"` region |
-| **Last move highlight** | 1.4.11: Visual info has 3:1 contrast | Yellow overlay on squares: 4.5:1 contrast |
+| Feature                 | Requirement                                        | Solution                                     |
+| ----------------------- | -------------------------------------------------- | -------------------------------------------- |
+| **Sound effects**       | 1.2.1: Audio-only content needs text alternative   | Add visual indicator (toast) alongside sound |
+| **Turn popup**          | 4.1.3: Status messages programmatically determined | Use `aria-live="polite"` region              |
+| **Last move highlight** | 1.4.11: Visual info has 3:1 contrast               | Yellow overlay on squares: 4.5:1 contrast    |
 
 **Implementation:**
+
 ```tsx
 <div aria-live="polite" className="sr-only">
   {ariaMessage}
@@ -371,25 +404,25 @@ const toggleSound = () => {
 
 ## ⚠️ Risks & Unknowns
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| **Browser blocks sound autoplay** | High | Medium | Show "tap to enable sound" on first load, use first move as unlock |
-| **Sound files bloat bundle** | Low | Low | Host in `/public/sounds/`, load on demand (~50KB total) |
-| **Popup violates "zero distraction"** | Medium | Medium | Make dismissable, auto-hide after 2s, subtle styling |
-| **react-chessboard doesn't support customSquareStyles** | Low | High | Verified in docs — `customSquareStyles` prop exists in v5.10.0 |
-| **Inconsistent turn detection** | Low | High | chess.js `.turn()` is reliable — trust the library |
-| **Users want sound off by default** | Medium | Low | Default to on, provide toggle, respect localStorage |
+| Risk                                                    | Likelihood | Impact | Mitigation                                                         |
+| ------------------------------------------------------- | ---------- | ------ | ------------------------------------------------------------------ |
+| **Browser blocks sound autoplay**                       | High       | Medium | Show "tap to enable sound" on first load, use first move as unlock |
+| **Sound files bloat bundle**                            | Low        | Low    | Host in `/public/sounds/`, load on demand (~50KB total)            |
+| **Popup violates "zero distraction"**                   | Medium     | Medium | Make dismissable, auto-hide after 2s, subtle styling               |
+| **react-chessboard doesn't support customSquareStyles** | Low        | High   | Verified in docs — `customSquareStyles` prop exists in v5.10.0     |
+| **Inconsistent turn detection**                         | Low        | High   | chess.js `.turn()` is reliable — trust the library                 |
+| **Users want sound off by default**                     | Medium     | Low    | Default to on, provide toggle, respect localStorage                |
 
 ---
 
 ## 📦 Dependencies Impact
 
-| Library | Size (gzipped) | Purpose | Recommendation |
-|---------|---------------|---------|----------------|
-| **howler.js** | 24KB | Sound playback | ❌ Overkill for 3 sounds |
-| **sonner** | 4KB | Toast notifications | ⚠️ Consider if want reusable toast |
-| **react-hot-toast** | 3.5KB | Toast notifications | ⚠️ Alternative to sonner |
-| **Native APIs** | 0KB | Audio + custom toast | ✅ Recommended |
+| Library             | Size (gzipped) | Purpose              | Recommendation                     |
+| ------------------- | -------------- | -------------------- | ---------------------------------- |
+| **howler.js**       | 24KB           | Sound playback       | ❌ Overkill for 3 sounds           |
+| **sonner**          | 4KB            | Toast notifications  | ⚠️ Consider if want reusable toast |
+| **react-hot-toast** | 3.5KB          | Toast notifications  | ⚠️ Alternative to sonner           |
+| **Native APIs**     | 0KB            | Audio + custom toast | ✅ Recommended                     |
 
 **Total bundle increase (recommended approach):** ~0KB code + ~50KB assets (MP3 files in `/public/`)
 
@@ -400,12 +433,14 @@ const toggleSound = () => {
 ### Sound Effects: Native HTML5 Audio
 
 **Rationale:**
+
 - Zero dependencies
 - Adequate for 2-3 sound effects
 - Audio files served from `/public/sounds/` (not bundled)
 - First move unlocks audio (browser autoplay policy)
 
 **Implementation plan:**
+
 1. Add `playSound(type)` utility function
 2. Call on `isCheckmate()`, `isCheck()`, `isGameOver()`
 3. Add sound toggle button (localStorage persisted)
@@ -414,11 +449,13 @@ const toggleSound = () => {
 ### Last Move Highlight: customSquareStyles
 
 **Rationale:**
+
 - Built into react-chessboard
 - Industry standard pattern
 - Zero dependencies
 
 **Implementation plan:**
+
 1. Add `lastMove` state: `{ from: string; to: string } | null`
 2. Update on successful move
 3. Pass to `customSquareStyles` prop
@@ -427,12 +464,14 @@ const toggleSound = () => {
 ### Turn Validation: Custom Toast Component
 
 **Rationale:**
+
 - Balances simplicity vs UX quality
 - No dependencies
 - Full control over styling
 - Accessible with ARIA live region
 
 **Implementation plan:**
+
 1. Create `<Toast>` component (~30 lines)
 2. Add turn check in `onDrop` before move attempt
 3. Show toast with "It's [Color]'s turn!" message
@@ -443,14 +482,14 @@ const toggleSound = () => {
 
 ## 🎯 Comparison Table
 
-| Feature | Approach | Dependencies | Bundle Impact | Effort | Recommendation |
-|---------|----------|--------------|---------------|--------|----------------|
-| **Sound Effects** | Native Audio API | None | 0KB code + 50KB assets | 2-3h | ✅ Recommended |
-| | howler.js | +1 library | +24KB + 50KB assets | 2-3h | ❌ Overkill |
-| **Last Move Highlight** | customSquareStyles | None (built-in) | 0KB | 1h | ✅ Only option |
-| **Turn Validation** | Custom Toast | None | ~1KB | 3-4h | ✅ Recommended |
-| | sonner library | +1 library | +4KB | 2h | ⚠️ Alternative |
-| | Browser alert() | None | 0KB | 5min | ❌ Poor UX |
+| Feature                 | Approach           | Dependencies    | Bundle Impact          | Effort | Recommendation |
+| ----------------------- | ------------------ | --------------- | ---------------------- | ------ | -------------- |
+| **Sound Effects**       | Native Audio API   | None            | 0KB code + 50KB assets | 2-3h   | ✅ Recommended |
+|                         | howler.js          | +1 library      | +24KB + 50KB assets    | 2-3h   | ❌ Overkill    |
+| **Last Move Highlight** | customSquareStyles | None (built-in) | 0KB                    | 1h     | ✅ Only option |
+| **Turn Validation**     | Custom Toast       | None            | ~1KB                   | 3-4h   | ✅ Recommended |
+|                         | sonner library     | +1 library      | +4KB                   | 2h     | ⚠️ Alternative |
+|                         | Browser alert()    | None            | 0KB                    | 5min   | ❌ Poor UX     |
 
 ---
 
@@ -459,41 +498,41 @@ const toggleSound = () => {
 ### Unit Tests (Jest + RTL)
 
 ```typescript
-describe('Sound Effects', () => {
-  it('plays checkmate sound when game ends in checkmate', () => {
+describe("Sound Effects", () => {
+  it("plays checkmate sound when game ends in checkmate", () => {
     // Mock Audio constructor
     // Simulate checkmate position
     // Verify audio.play() called
-  })
-  
-  it('respects sound toggle preference from localStorage', () => {
+  });
+
+  it("respects sound toggle preference from localStorage", () => {
     // Set localStorage to 'false'
     // Make move
     // Verify audio.play() NOT called
-  })
-})
+  });
+});
 
-describe('Last Move Highlight', () => {
-  it('highlights from and to squares after move', () => {
+describe("Last Move Highlight", () => {
+  it("highlights from and to squares after move", () => {
     // Render board
     // Make move e2→e4
     // Verify customSquareStyles contains e2 and e4 with yellow background
-  })
-})
+  });
+});
 
-describe('Turn Validation', () => {
-  it('shows error toast when wrong player tries to move', () => {
+describe("Turn Validation", () => {
+  it("shows error toast when wrong player tries to move", () => {
     // White just moved (black's turn)
     // Attempt to drag white piece
     // Verify toast shows "It's Black's turn!"
-  })
-  
-  it('auto-dismisses toast after 2 seconds', async () => {
+  });
+
+  it("auto-dismisses toast after 2 seconds", async () => {
     // Show toast
     // Wait 2.1s
     // Verify toast removed from DOM
-  })
-})
+  });
+});
 ```
 
 ### Manual QA Checklist
@@ -513,17 +552,17 @@ describe('Turn Validation', () => {
 
 ## 📐 Affected Files
 
-| Action | Path | Purpose |
-|--------|------|---------|
-| Modify | `app/page.tsx` | Add sound, lastMove state, turn validation, toast component |
-| Modify | `package.json` | No new dependencies (native approach) |
-| Create | `public/sounds/move.mp3` | Move sound effect (optional) |
-| Create | `public/sounds/check.mp3` | Check sound effect |
-| Create | `public/sounds/checkmate.mp3` | Checkmate/win sound effect |
-| Create | `components/Toast.tsx` | Reusable toast notification component |
-| Create | `components/SoundToggle.tsx` | Sound on/off button component |
-| Modify | `app/page.test.tsx` | Add tests for new features |
-| Create | `components/Toast.test.tsx` | Toast component tests |
+| Action | Path                          | Purpose                                                     |
+| ------ | ----------------------------- | ----------------------------------------------------------- |
+| Modify | `app/page.tsx`                | Add sound, lastMove state, turn validation, toast component |
+| Modify | `package.json`                | No new dependencies (native approach)                       |
+| Create | `public/sounds/move.mp3`      | Move sound effect (optional)                                |
+| Create | `public/sounds/check.mp3`     | Check sound effect                                          |
+| Create | `public/sounds/checkmate.mp3` | Checkmate/win sound effect                                  |
+| Create | `components/Toast.tsx`        | Reusable toast notification component                       |
+| Create | `components/SoundToggle.tsx`  | Sound on/off button component                               |
+| Modify | `app/page.test.tsx`           | Add tests for new features                                  |
+| Create | `components/Toast.test.tsx`   | Toast component tests                                       |
 
 **Estimated LOC:** ~200 lines (including tests)
 
@@ -532,6 +571,7 @@ describe('Turn Validation', () => {
 ## 🚀 Implementation Sequence
 
 ### Phase 1: Last Move Highlight (Lowest Risk)
+
 1. Add `lastMove` state
 2. Update on successful move
 3. Pass to `customSquareStyles`
@@ -542,6 +582,7 @@ describe('Turn Validation', () => {
 **Blocker:** None
 
 ### Phase 2: Turn Validation Toast
+
 1. Create `<Toast>` component with ARIA
 2. Add turn check logic in `onDrop`
 3. Show toast on wrong player attempt
@@ -553,6 +594,7 @@ describe('Turn Validation', () => {
 **Blocker:** None
 
 ### Phase 3: Sound Effects
+
 1. Source/create MP3 files (CC0 licensed)
 2. Add sound utility function
 3. Integrate with game state checks
@@ -590,6 +632,7 @@ describe('Turn Validation', () => {
 ## 🧠 Key Knowledge Files
 
 **If knowledge/ folder existed, would reference:**
+
 - `knowledge/react/state-management.md` — useState patterns
 - `knowledge/web-apis/audio.md` — HTML5 Audio API + autoplay policies
 - `knowledge/accessibility/wcag-2.1.md` — ARIA live regions, contrast ratios
@@ -597,6 +640,7 @@ describe('Turn Validation', () => {
 - `knowledge/ux/notifications.md` — Toast patterns, timing, positioning
 
 **Applicable instruction files:**
+
 - `coding-standards.instructions.md` — TypeScript, React patterns
 - `testing-standards.instructions.md` — Jest setup, coverage requirements
 - `security.instructions.md` — No hardcoded values, safe external asset handling
@@ -620,6 +664,7 @@ describe('Turn Validation', () => {
 **Recommendation:** **Proceed with native HTML5 Audio + custom Toast + customSquareStyles**
 
 This approach:
+
 - Adds zero dependencies
 - Maintains "zero distraction" positioning with subtle enhancements
 - Keeps bundle size minimal (~0KB code, ~50KB assets)

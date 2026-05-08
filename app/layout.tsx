@@ -4,17 +4,20 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Pass & Play Chess | Free Offline Chess Board",
-  description: "Play chess offline with a friend on the same device. Pass-and-play chess board with drag-and-drop moves. No login, no download required.",
+  description:
+    "Play chess offline with a friend on the same device. Pass-and-play chess board with drag-and-drop moves. No login, no download required.",
   openGraph: {
     title: "Pass & Play Chess | Free Offline Chess Board",
-    description: "Play chess offline with a friend on the same device. Pass-and-play chess board with drag-and-drop moves. No login, no download required.",
+    description:
+      "Play chess offline with a friend on the same device. Pass-and-play chess board with drag-and-drop moves. No login, no download required.",
     type: "website",
     images: ["/og.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Pass & Play Chess | Free Offline Chess Board",
-    description: "Play chess offline with a friend on the same device. Pass-and-play chess board with drag-and-drop moves. No login, no download required.",
+    description:
+      "Play chess offline with a friend on the same device. Pass-and-play chess board with drag-and-drop moves. No login, no download required.",
     images: ["/og.png"],
   },
 };
@@ -30,15 +33,15 @@ export default function RootLayout({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Pass & Play Chess",
-    "description": "Free offline chess board for two players on the same device",
-    "applicationCategory": "Game",
-    "operatingSystem": "Web Browser",
-    "offers": {
+    name: "Pass & Play Chess",
+    description: "Free offline chess board for two players on the same device",
+    applicationCategory: "Game",
+    operatingSystem: "Web Browser",
+    offers: {
       "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
+      price: "0",
+      priceCurrency: "USD",
+    },
   };
 
   return (
@@ -50,7 +53,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body style={{ margin: 0, padding: 0, overflow: 'hidden' }}>
+      <body style={{ margin: 0, padding: 0, overflow: "hidden" }}>
         {adsenseClientId && (
           <Script
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}

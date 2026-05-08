@@ -25,6 +25,7 @@
 Tests written for original "chessboard-only" implementation. When technical SEO ticket added sr-only content section with semantic HTML (h1, h2, paragraphs), tests broke because they explicitly check for **no headings**.
 
 **Conflicting requirements:**
+
 - Original ticket ([offline-chess-board.md](../../work/done/offline-chess-board.md)): "Page displays only chessboard—no headers, buttons, text, or controls"
 - SEO ticket ([seo-technical-improvements.md](../../work/done/seo-technical-improvements.md)): "Page has `<h1>` heading with 'Pass & Play Chess' text" and "Page has semantic HTML content with 200+ words"
 
@@ -35,8 +36,9 @@ Tests written for original "chessboard-only" implementation. When technical SEO 
 ## ❌ Failing Tests
 
 ### Test 1: "displays only chessboard - no headers or navigation"
+
 ```typescript
-expect(screen.queryByRole('heading')).not.toBeInTheDocument()
+expect(screen.queryByRole("heading")).not.toBeInTheDocument();
 ```
 
 **Fails because:** Multiple `<h1>` and `<h2>` tags exist in sr-only section
@@ -44,12 +46,13 @@ expect(screen.queryByRole('heading')).not.toBeInTheDocument()
 **Expected behavior:** sr-only headings should exist (for SEO), but no **visible** headings
 
 ### Test 2: "has fullscreen layout with flexbox centering"
+
 ```typescript
 expect(mainElement).toHaveStyle({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-})
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+});
 ```
 
 **Fails because:** DOM structure changed—sr-only section wrapped in `<>` fragment, main element is now `<div>` not root
@@ -57,9 +60,10 @@ expect(mainElement).toHaveStyle({
 **Expected behavior:** Chessboard container (not root) should have flex centering styles
 
 ### Test 3 & 4: "board container is square and responsive" + "has max-width constraint"
+
 ```typescript
-const style = boardContainer.getAttribute('style')
-expect(style).toContain('width: 100%')
+const style = boardContainer.getAttribute("style");
+expect(style).toContain("width: 100%");
 ```
 
 **Fails because:** Can't find `boardContainer` element—query selector outdated after DOM restructure
@@ -88,27 +92,33 @@ expect(style).toContain('width: 100%')
 **File:** `app/page.test.tsx`
 
 1. **Test: "displays only chessboard - no headers or navigation"**
+
    ```typescript
    // OLD (fails):
-   expect(screen.queryByRole('heading')).not.toBeInTheDocument()
-   
+   expect(screen.queryByRole("heading")).not.toBeInTheDocument();
+
    // NEW (correct):
    // sr-only headings should exist for SEO
-   const srOnlySection = document.querySelector('.sr-only')
-   expect(srOnlySection).toBeInTheDocument()
-   expect(within(srOnlySection).getByRole('heading', { level: 1 })).toHaveTextContent('Pass & Play Chess')
-   
+   const srOnlySection = document.querySelector(".sr-only");
+   expect(srOnlySection).toBeInTheDocument();
+   expect(
+     within(srOnlySection).getByRole("heading", { level: 1 }),
+   ).toHaveTextContent("Pass & Play Chess");
+
    // No visible headings outside sr-only section
-   const visibleContent = document.querySelector('div[style*="display: flex"]')
-   expect(within(visibleContent).queryByRole('heading')).not.toBeInTheDocument()
+   const visibleContent = document.querySelector('div[style*="display: flex"]');
+   expect(
+     within(visibleContent).queryByRole("heading"),
+   ).not.toBeInTheDocument();
    ```
 
 2. **Test: "has fullscreen layout with flexbox centering"**
+
    ```typescript
    // OLD (fails):
    const mainElement = container.firstChild as HTMLElement
    expect(mainElement).toHaveStyle({ display: 'flex', ... })
-   
+
    // NEW (correct):
    // Find the chessboard wrapper div (second child after sr-only section)
    const chessboardWrapper = container.querySelector('div[style*="display: flex"]')
@@ -122,16 +132,17 @@ expect(style).toContain('width: 100%')
    ```
 
 3. **Test: "board container is square and responsive"**
+
    ```typescript
    // OLD (fails):
-   const boardContainer = screen.getByTestId('chessboard').parentElement
-   
+   const boardContainer = screen.getByTestId("chessboard").parentElement;
+
    // NEW (correct):
-   const boardContainer = screen.getByTestId('chessboard').parentElement
-   expect(boardContainer).toBeInTheDocument()
-   const style = boardContainer?.getAttribute('style')
-   expect(style).toContain('width: 100%')
-   expect(style).toContain('aspect-ratio: 1')
+   const boardContainer = screen.getByTestId("chessboard").parentElement;
+   expect(boardContainer).toBeInTheDocument();
+   const style = boardContainer?.getAttribute("style");
+   expect(style).toContain("width: 100%");
+   expect(style).toContain("aspect-ratio: 1");
    ```
 
 4. **Test: "board container has responsive max-width constraint"**
@@ -146,24 +157,24 @@ describe('SEO Content', () => {
   it('has sr-only section with semantic HTML for search engines', () => {
     render(<Home />)
     const srOnly = document.querySelector('.sr-only')
-    
+
     expect(srOnly).toBeInTheDocument()
     expect(srOnly).toHaveAttribute('aria-label', 'About Pass & Play Chess')
-    
+
     // Verify headings
     const h1 = within(srOnly).getByRole('heading', { level: 1 })
     expect(h1).toHaveTextContent('Pass & Play Chess — Free Offline Chess Board')
-    
+
     // Verify target keywords present
     expect(within(srOnly).getByText(/pass and play chess/i)).toBeInTheDocument()
     expect(within(srOnly).getByText(/offline/i)).toBeInTheDocument()
     expect(within(srOnly).getByText(/two players/i)).toBeInTheDocument()
   })
-  
+
   it('sr-only content is visually hidden but accessible to screen readers', () => {
     render(<Home />)
     const srOnly = document.querySelector('.sr-only')
-    
+
     // sr-only class hides content visually (check computed styles in real browser)
     expect(srOnly).toHaveClass('sr-only')
   })
@@ -175,6 +186,7 @@ describe('SEO Content', () => {
 ## 🧪 Verification Steps
 
 1. Run failing tests to confirm current state:
+
    ```bash
    npm test -- app/page.test.tsx
    ```
@@ -182,11 +194,13 @@ describe('SEO Content', () => {
 2. Apply fixes above
 
 3. Re-run tests:
+
    ```bash
    npm test
    ```
 
 4. Verify all tests pass:
+
    ```bash
    npm test -- --coverage
    ```
@@ -213,11 +227,13 @@ describe('SEO Content', () => {
 ## 🎯 Priority Justification
 
 **Critical severity because:**
+
 - Blocks production deployment (CI/CD fails)
 - Affects all future development (broken CI)
 - Quick fix (1-2 hours)—no reason to defer
 
 **Not a product bug:**
+
 - Feature is working correctly (SEO content intentionally added)
 - Tests simply need to reflect new reality
 
