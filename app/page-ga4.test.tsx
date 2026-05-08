@@ -1,6 +1,5 @@
 import '@testing-library/jest-dom'
-import { render, screen, waitFor } from '@testing-library/react'
-import { act } from 'react'
+import { render, waitFor } from '@testing-library/react'
 import Home from './page'
 
 // Mock window.gtag
@@ -30,7 +29,7 @@ describe('GA4 Integration', () => {
     
     // Simulate a move by calling onDrop directly
     // Note: This is a simplified test - real E2E would drag pieces
-    const chessboard = container.querySelector('[data-testid="chessboard"]')
+    container.querySelector('[data-testid="chessboard"]')
     
     // For now, just verify gtag is available for move tracking
     expect(window.gtag).toBeDefined()
