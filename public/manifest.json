@@ -1,0 +1,21 @@
+{
+  "name": "Pass & Play Chess | Free Offline Chess Board",
+  "short_name": "Chess",
+  "description": "Play chess offline with a friend on the same device. Pass-and-play chess board with drag-and-drop moves.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
