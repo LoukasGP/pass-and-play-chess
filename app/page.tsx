@@ -45,7 +45,38 @@ export default function Home() {
     }
   }, []);
 
-  const playSound = (type: "check" | "checkmate") => {
+  type SoundType = "move" | "capture" | "castle" | "check" | "checkmate";
+
+  const detectMoveType = (game: Chess): SoundType => {
+    // Priority: checkmate > check > castle > capture > move
+    if (game.isCheckmate()) {
+      return "checkmate";
+    }
+    if (game.isCheck()) {
+      return "check";
+    }
+
+    const history = game.history({ verbose: true });
+    const lastMove = history[history.length - 1];
+
+    if (!lastMove) {
+      return "move";
+    }
+
+    // Check for castling
+    if (lastMove.flags.includes("k") || lastMove.flags.includes("q")) {
+      return "castle";
+    }
+
+    // Check for capture
+    if (lastMove.captured) {
+      return "capture";
+    }
+
+    return "move";
+  };
+
+  const playSound = (type: SoundType) => {
     if (!soundEnabled) return;
 
     const audio = new Audio(`/sounds/${type}.mp3`);
@@ -214,12 +245,9 @@ export default function Home() {
         });
       }
 
-      // Play sound based on game state
-      if (gameCopy.isCheckmate()) {
-        playSound("checkmate");
-      } else if (gameCopy.isCheck()) {
-        playSound("check");
-      }
+      // Play sound based on move type
+      const moveType = detectMoveType(gameCopy);
+      playSound(moveType);
 
       return true;
     } catch {
