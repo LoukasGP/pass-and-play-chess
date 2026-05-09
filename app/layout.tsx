@@ -52,15 +52,15 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-      </head>
-      <body style={{ margin: 0, padding: 0, overflow: "hidden" }}>
         {adsenseClientId && (
           <Script
+            async
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
-            strategy="afterInteractive"
             crossOrigin="anonymous"
           />
         )}
+      </head>
+      <body style={{ margin: 0, padding: 0, overflow: "hidden" }}>
         {ga4MeasurementId && (
           <>
             <Script
