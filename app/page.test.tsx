@@ -455,7 +455,7 @@ describe("Chess Board Page", () => {
       // Toast should appear with turn error message
       const toast = screen.getByTestId("toast");
       expect(toast).toBeInTheDocument();
-      expect(toast).toHaveTextContent("It's White's turn!");
+      expect(toast).toHaveTextContent("White to move");
     });
 
     it("shows toast when black player attempts to move white piece", () => {
@@ -474,7 +474,7 @@ describe("Chess Board Page", () => {
       // Toast should appear with turn error message
       const toast = screen.getByTestId("toast");
       expect(toast).toBeInTheDocument();
-      expect(toast).toHaveTextContent("It's Black's turn!");
+      expect(toast).toHaveTextContent("Black to move");
     });
 
     it("does not update board position when wrong player attempts move", () => {

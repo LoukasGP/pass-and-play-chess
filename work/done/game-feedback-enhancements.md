@@ -239,7 +239,7 @@ function onDrop({ sourceSquare, targetSquare }) {
 **Implementation:**
 
 ```typescript
-alert("It's White's turn!");
+alert("White to move");
 ```
 
 **Pros:**
@@ -294,7 +294,7 @@ useEffect(() => {
 ```typescript
 import { toast, Toaster } from 'sonner'
 
-toast.error("It's White's turn!")
+toast.error("White to move")
 
 // In layout:
 <Toaster position="top-center" />
@@ -319,7 +319,7 @@ toast.error("It's White's turn!")
 ```typescript
 import toast, { Toaster } from "react-hot-toast";
 
-toast("It's White's turn!", { icon: "♟️" });
+toast("White to move", { icon: "♟️" });
 ```
 
 **Pros:**
@@ -524,7 +524,7 @@ describe("Turn Validation", () => {
   it("shows error toast when wrong player tries to move", () => {
     // White just moved (black's turn)
     // Attempt to drag white piece
-    // Verify toast shows "It's Black's turn!"
+    // Verify toast shows "Black to move"
   });
 
   it("auto-dismisses toast after 2 seconds", async () => {

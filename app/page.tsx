@@ -249,7 +249,7 @@ export default function Home() {
 
     if (piece && piece.color !== currentTurn) {
       setToastMessage(
-        `It's ${currentTurn === "w" ? "White" : "Black"}'s turn!`,
+        `${currentTurn === "w" ? "White" : "Black"} to move`,
       );
       return false;
     }
