@@ -248,9 +248,7 @@ export default function Home() {
     const currentTurn = game.turn(); // 'w' | 'b'
 
     if (piece && piece.color !== currentTurn) {
-      setToastMessage(
-        `${currentTurn === "w" ? "White" : "Black"} to move`,
-      );
+      setToastMessage(`${currentTurn === "w" ? "White" : "Black"} to move`);
       return false;
     }
 
