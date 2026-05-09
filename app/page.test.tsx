@@ -1,5 +1,9 @@
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import Home from "@/app/page";
+import confetti from "canvas-confetti";
+
+// Mock canvas-confetti
+jest.mock("canvas-confetti", () => jest.fn());
 
 // Mock Toast component
 jest.mock("@/components/Toast", () => {
@@ -85,6 +89,9 @@ Object.defineProperty(window, "sessionStorage", {
 });
 
 // Mock react-chessboard to avoid canvas/rendering issues in tests
+let mockMoveSequence: Array<{ from: string; to: string }> = [];
+let mockMoveIndex = 0;
+
 jest.mock("react-chessboard", () => ({
   Chessboard: ({
     options,
@@ -103,8 +110,22 @@ jest.mock("react-chessboard", () => ({
         data-testid="piece-drop-handler"
         data-on-piece-drop="true"
         onClick={() => {
-          // Simulate a valid move (e2 to e4)
-          if (options.onPieceDrop) {
+          // Use mock move sequence if available, otherwise default e2-e4
+          if (
+            mockMoveSequence.length > 0 &&
+            mockMoveIndex < mockMoveSequence.length
+          ) {
+            const move = mockMoveSequence[mockMoveIndex];
+            mockMoveIndex++;
+            if (options.onPieceDrop) {
+              act(() => {
+                options.onPieceDrop({
+                  sourceSquare: move.from,
+                  targetSquare: move.to,
+                });
+              });
+            }
+          } else if (options.onPieceDrop) {
             act(() => {
               options.onPieceDrop({ sourceSquare: "e2", targetSquare: "e4" });
             });
@@ -793,6 +814,209 @@ describe("Chess Board Page", () => {
 
       // sessionStorage should still work
       expect(sessionStorageMock.setItem).toHaveBeenCalled();
+    });
+  });
+
+  describe("Victory Modal", () => {
+    beforeEach(() => {
+      jest.mocked(confetti).mockClear();
+      mockAudioInstances.length = 0;
+      mockPlay.mockClear();
+      localStorageMock.clear();
+      sessionStorageMock.clear();
+      mockMoveSequence = [];
+      mockMoveIndex = 0;
+    });
+
+    const executeMoves = (moves: Array<{ from: string; to: string }>) => {
+      mockMoveSequence = moves;
+      mockMoveIndex = 0;
+      const moveHandler = screen.getByTestId("piece-drop-handler");
+      moves.forEach(() => {
+        moveHandler.click();
+      });
+    };
+
+    it("shows victory modal when checkmate occurs (Scholar's Mate - White wins)", () => {
+      render(<Home />);
+
+      // Scholar's Mate: 1.e4 e5 2.Bc4 Nc6 3.Qh5 Nf6 4.Qxf7#
+      executeMoves([
+        { from: "e2", to: "e4" },
+        { from: "e7", to: "e5" },
+        { from: "f1", to: "c4" },
+        { from: "b8", to: "c6" },
+        { from: "d1", to: "h5" },
+        { from: "g8", to: "f6" },
+        { from: "h5", to: "f7" }, // Checkmate!
+      ]);
+
+      // Modal should appear
+      const modal = screen.getByRole("dialog");
+      expect(modal).toBeInTheDocument();
+      expect(modal).toHaveTextContent("White Wins!");
+      expect(modal).toHaveTextContent("Checkmate");
+    });
+
+    it("displays correct winner for Black victory (Fool's Mate)", () => {
+      render(<Home />);
+
+      // Fool's Mate: 1.f3 e5 2.g4 Qh4# (Black wins)
+      executeMoves([
+        { from: "f2", to: "f3" },
+        { from: "e7", to: "e5" },
+        { from: "g2", to: "g4" },
+        { from: "d8", to: "h4" }, // Checkmate!
+      ]);
+
+      const modal = screen.getByRole("dialog");
+      expect(modal).toHaveTextContent("Black Wins!");
+    });
+
+    it("fires confetti when victory modal appears", () => {
+      render(<Home />);
+
+      // Trigger Scholar's Mate
+      executeMoves([
+        { from: "e2", to: "e4" },
+        { from: "e7", to: "e5" },
+        { from: "f1", to: "c4" },
+        { from: "b8", to: "c6" },
+        { from: "d1", to: "h5" },
+        { from: "g8", to: "f6" },
+        { from: "h5", to: "f7" },
+      ]);
+
+      // Confetti should be called
+      expect(confetti).toHaveBeenCalledTimes(1);
+      expect(confetti).toHaveBeenCalledWith(
+        expect.objectContaining({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          disableForReducedMotion: true,
+        }),
+      );
+    });
+
+    it("has Download Moves (PGN) button that triggers download", () => {
+      // Mock createElement and click for download
+      const mockClick = jest.fn();
+      const mockLink = { click: mockClick, href: "", download: "" };
+      const originalCreateElement = document.createElement;
+      jest
+        .spyOn(document, "createElement")
+        .mockImplementation((tagName: string) => {
+          if (tagName === "a") return mockLink as unknown as HTMLAnchorElement;
+          return originalCreateElement.call(document, tagName);
+        });
+
+      // Mock URL.createObjectURL and URL.revokeObjectURL
+      const mockCreateObjectURL = jest.fn().mockReturnValue("blob:mock-url");
+      const mockRevokeObjectURL = jest.fn();
+      global.URL.createObjectURL = mockCreateObjectURL;
+      global.URL.revokeObjectURL = mockRevokeObjectURL;
+
+      render(<Home />);
+
+      // Trigger checkmate
+      executeMoves([
+        { from: "e2", to: "e4" },
+        { from: "e7", to: "e5" },
+        { from: "f1", to: "c4" },
+        { from: "b8", to: "c6" },
+        { from: "d1", to: "h5" },
+        { from: "g8", to: "f6" },
+        { from: "h5", to: "f7" },
+      ]);
+
+      const downloadButton = screen.getByText("Download Moves (PGN)");
+      fireEvent.click(downloadButton);
+
+      expect(mockClick).toHaveBeenCalled();
+      expect(mockLink.download).toMatch(/chess-game-White-wins-\d+\.pgn/);
+      expect(mockCreateObjectURL).toHaveBeenCalledWith(expect.any(Blob));
+      expect(mockRevokeObjectURL).toHaveBeenCalledWith("blob:mock-url");
+
+      jest.restoreAllMocks();
+    });
+
+    it("Play Again button resets game and closes modal", () => {
+      render(<Home />);
+
+      // Trigger checkmate
+      executeMoves([
+        { from: "e2", to: "e4" },
+        { from: "e7", to: "e5" },
+        { from: "f1", to: "c4" },
+        { from: "b8", to: "c6" },
+        { from: "d1", to: "h5" },
+        { from: "g8", to: "f6" },
+        { from: "h5", to: "f7" },
+      ]);
+
+      const playAgainButton = screen.getByText("Play Again");
+      fireEvent.click(playAgainButton);
+
+      // Modal should be gone
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+      // Board should be reset to starting position
+      const resetBoard = screen.getByTestId("chessboard");
+      expect(resetBoard).toHaveAttribute(
+        "data-position",
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      );
+
+      // localStorage should be cleared
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith(
+        "chess_game_last_fen",
+      );
+    });
+
+    it("does NOT show modal on check (only checkmate)", () => {
+      render(<Home />);
+
+      // Setup a position where Black is in check but not checkmate
+      executeMoves([
+        { from: "e2", to: "e4" },
+        { from: "e7", to: "e5" },
+        { from: "f1", to: "c4" },
+        { from: "b8", to: "c6" },
+        { from: "d1", to: "h5" },
+        { from: "g8", to: "f6" },
+        { from: "h5", to: "e5" }, // Check but not checkmate
+      ]);
+
+      // Modal should NOT appear
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+      expect(screen.queryByText("White Wins!")).not.toBeInTheDocument();
+    });
+
+    it("modal has correct ARIA attributes for accessibility", () => {
+      render(<Home />);
+
+      // Trigger checkmate
+      executeMoves([
+        { from: "e2", to: "e4" },
+        { from: "e7", to: "e5" },
+        { from: "f1", to: "c4" },
+        { from: "b8", to: "c6" },
+        { from: "d1", to: "h5" },
+        { from: "g8", to: "f6" },
+        { from: "h5", to: "f7" },
+      ]);
+
+      const modal = screen.getByRole("dialog");
+      expect(modal).toHaveAttribute("aria-labelledby", "victory-title");
+      expect(modal).toHaveAttribute("aria-describedby", "victory-subtitle");
+      expect(modal).toHaveAttribute("aria-live", "assertive");
+
+      const title = screen.getByText("White Wins! 🎉");
+      expect(title).toHaveAttribute("id", "victory-title");
+
+      const subtitle = screen.getByText("Checkmate");
+      expect(subtitle).toHaveAttribute("id", "victory-subtitle");
     });
   });
 });

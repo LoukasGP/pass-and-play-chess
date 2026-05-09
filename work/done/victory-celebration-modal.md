@@ -2,7 +2,7 @@
 
 **Parent:** None  
 **Date:** 2026-05-09  
-**Status:** 🔴 Not Started  
+**Status:** ✅ Done  
 **Dependencies:** None  
 **Spike:** [victory-celebration-modal.md](../spike/victory-celebration-modal.md)
 
@@ -141,39 +141,41 @@ function handlePlayAgain() {
 Add victory modal JSX before existing resume modal. Use same structure as resume modal: fixed overlay, white card, ARIA labels. Two buttons: Download (primary) and Play Again (secondary).
 
 ```tsx
-{victoryWinner && (
-  <div
-    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-    role="dialog"
-    aria-labelledby="victory-title"
-    aria-describedby="victory-subtitle"
-    aria-live="assertive"
-  >
-    <div className="bg-white p-6 rounded shadow-lg max-w-md">
-      <h2 id="victory-title" className="text-2xl font-bold mb-2">
-        {victoryWinner} Wins! 🎉
-      </h2>
-      <p id="victory-subtitle" className="text-gray-600 mb-6">
-        Checkmate
-      </p>
-      <div className="flex flex-col gap-3">
-        <button
-          onClick={() => downloadPGN(game, victoryWinner)}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          autoFocus
-        >
-          Download Moves (PGN)
-        </button>
-        <button
-          onClick={handlePlayAgain}
-          className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-        >
-          Play Again
-        </button>
+{
+  victoryWinner && (
+    <div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      role="dialog"
+      aria-labelledby="victory-title"
+      aria-describedby="victory-subtitle"
+      aria-live="assertive"
+    >
+      <div className="bg-white p-6 rounded shadow-lg max-w-md">
+        <h2 id="victory-title" className="text-2xl font-bold mb-2">
+          {victoryWinner} Wins! 🎉
+        </h2>
+        <p id="victory-subtitle" className="text-gray-600 mb-6">
+          Checkmate
+        </p>
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={() => downloadPGN(game, victoryWinner)}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            autoFocus
+          >
+            Download Moves (PGN)
+          </button>
+          <button
+            onClick={handlePlayAgain}
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+          >
+            Play Again
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-)}
+  );
+}
 ```
 
 Accessibility: `aria-live="assertive"` announces winner to screen readers, `autoFocus` on primary button, buttons 44×44px minimum (WCAG 2.5.5).
@@ -185,6 +187,7 @@ Run `npm run build` after this step to verify no TypeScript errors.
 In `app/page.test.tsx`, add test suite for victory modal. Mock canvas-confetti module. Test scenarios: checkmate triggers modal, winner displayed correctly, download button creates PGN file, Play Again resets game, confetti respects reduced motion.
 
 Test cases:
+
 - Scholar's Mate triggers victory modal
 - Modal displays "White Wins!" for white victory
 - Modal displays "Black Wins!" for black victory
@@ -196,6 +199,7 @@ Test cases:
 - Confetti NOT fired when `prefers-reduced-motion` is true
 
 Mock canvas-confetti:
+
 ```typescript
 jest.mock("canvas-confetti", () => jest.fn());
 ```
@@ -212,37 +216,41 @@ jest.mock("canvas-confetti", () => jest.fn());
 ## ✅ Acceptance Criteria
 
 ### Functional
-- [ ] Victory modal appears immediately when checkmate occurs
-- [ ] Modal displays correct winner color ("White Wins!" or "Black Wins!")
-- [ ] Modal shows "Checkmate" subtitle
-- [ ] Confetti animation plays when modal opens (150 particles, gold/orange/red)
-- [ ] Download button downloads PGN file with format: `chess-game-[Winner]-wins-[timestamp].pgn`
-- [ ] PGN file contains all moves in correct chess notation (e.g., "1. e4 e5 2. Nf3...")
-- [ ] Play Again button resets board to starting position (white pieces bottom)
-- [ ] Play Again clears localStorage (no "Resume last game?" on reload)
-- [ ] Existing `checkmate.mp3` sound still plays before modal appears
-- [ ] Victory modal does NOT appear on stalemate (not checkmate)
-- [ ] Victory modal does NOT appear on check (only checkmate)
+
+- [x] Victory modal appears immediately when checkmate occurs
+- [x] Modal displays correct winner color ("White Wins!" or "Black Wins!")
+- [x] Modal shows "Checkmate" subtitle
+- [x] Confetti animation plays when modal opens (150 particles, gold/orange/red)
+- [x] Download button downloads PGN file with format: `chess-game-[Winner]-wins-[timestamp].pgn`
+- [x] PGN file contains all moves in correct chess notation (e.g., "1. e4 e5 2. Nf3...")
+- [x] Play Again button resets board to starting position (white pieces bottom)
+- [x] Play Again clears localStorage (no "Resume last game?" on reload)
+- [x] Existing `checkmate.mp3` sound still plays before modal appears
+- [x] Victory modal does NOT appear on stalemate (not checkmate)
+- [x] Victory modal does NOT appear on check (only checkmate)
 
 ### Accessibility (WCAG 2.1 AA)
-- [ ] Modal has `role="dialog"`, `aria-labelledby="victory-title"`, `aria-describedby="victory-subtitle"`
-- [ ] Winner announced to screen readers via `aria-live="assertive"`
-- [ ] Confetti disabled when user has `prefers-reduced-motion` set
-- [ ] Confetti duration <1s (WCAG 2.3.1 — no flash threshold violation)
-- [ ] Download and Play Again buttons keyboard accessible (Tab navigation works)
-- [ ] Buttons meet 44×44px touch target minimum (WCAG 2.5.5)
-- [ ] Focus automatically moves to Download button when modal opens (`autoFocus`)
+
+- [x] Modal has `role="dialog"`, `aria-labelledby="victory-title"`, `aria-describedby="victory-subtitle"`
+- [x] Winner announced to screen readers via `aria-live="assertive"`
+- [x] Confetti disabled when user has `prefers-reduced-motion` set
+- [x] Confetti duration <1s (WCAG 2.3.1 — no flash threshold violation)
+- [x] Download and Play Again buttons keyboard accessible (Tab navigation works)
+- [x] Buttons meet 44×44px touch target minimum (WCAG 2.5.5)
+- [x] Focus automatically moves to Download button when modal opens (`autoFocus`)
 
 ### Performance
-- [ ] Bundle size increase ≤10KB gzipped (canvas-confetti adds ~6KB)
-- [ ] No layout shift when modal appears (CLS ≤0.1)
-- [ ] Confetti animation runs at 60fps (no frame drops)
-- [ ] `npm run build` succeeds
+
+- [x] Bundle size increase ≤10KB gzipped (canvas-confetti adds ~6KB)
+- [x] No layout shift when modal appears (CLS ≤0.1)
+- [x] Confetti animation runs at 60fps (no frame drops)
+- [x] `npm run build` succeeds
 
 ### Security
-- [ ] PGN filename sanitized — uses only hardcoded winner string + timestamp (no user input)
-- [ ] PGN download uses blob URLs (no server upload)
-- [ ] No XSS risk from winner string (only 'White' or 'Black' possible)
+
+- [x] PGN filename sanitized — uses only hardcoded winner string + timestamp (no user input)
+- [x] PGN download uses blob URLs (no server upload)
+- [x] No XSS risk from winner string (only 'White' or 'Black' possible)
 
 ## 🚫 Out of Scope
 
@@ -256,17 +264,17 @@ jest.mock("canvas-confetti", () => jest.fn());
 
 ## 🧪 Test Cases
 
-- [ ] Test: Scholar's Mate (Qxf7#) → Victory modal appears with "White Wins!"
-- [ ] Test: Fool's Mate (Qh4#) → Victory modal appears with "Black Wins!"
-- [ ] Test: Click Download button → PGN file downloads with correct filename
-- [ ] Test: Downloaded PGN content matches game moves → assertions on file content
-- [ ] Test: Click Play Again → board resets to starting position, modal closes
-- [ ] Test: Play Again clears localStorage → `getItem('chess_game_last_fen')` returns null
-- [ ] Test: Confetti fires on modal open → canvas-confetti mock called once
-- [ ] Test: `prefers-reduced-motion` enabled → confetti NOT called
-- [ ] Test: Check (not checkmate) → victory modal does NOT appear
-- [ ] Test: Stalemate → victory modal does NOT appear (game.isCheckmate() returns false)
-- [ ] Test: Modal has correct ARIA attributes → `role="dialog"`, `aria-labelledby`, `aria-describedby`
+- [x] Test: Scholar's Mate (Qxf7#) → Victory modal appears with "White Wins!"
+- [x] Test: Fool's Mate (Qh4#) → Victory modal appears with "Black Wins!"
+- [x] Test: Click Download button → PGN file downloads with correct filename
+- [x] Test: Downloaded PGN content matches game moves → assertions on file content
+- [x] Test: Click Play Again → board resets to starting position, modal closes
+- [x] Test: Play Again clears localStorage → `getItem('chess_game_last_fen')` returns null
+- [x] Test: Confetti fires on modal open → canvas-confetti mock called once
+- [x] Test: `prefers-reduced-motion` enabled → confetti NOT called
+- [x] Test: Check (not checkmate) → victory modal does NOT appear
+- [x] Test: Stalemate → victory modal does NOT appear (game.isCheckmate() returns false)
+- [x] Test: Modal has correct ARIA attributes → `role="dialog"`, `aria-labelledby`, `aria-describedby`
 
 ## ✅ Verification
 
