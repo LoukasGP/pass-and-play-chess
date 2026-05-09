@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Chess Offline – Play 2 Player Chess on One Device",
   description:
     "Play chess offline with someone next to you. Free chess board with drag-and-drop moves. No login, no download required.",
+  icons: {
+    icon: "/favicon.png",
+  },
   openGraph: {
     title: "Chess Offline – Play 2 Player Chess on One Device",
     description:

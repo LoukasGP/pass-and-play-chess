@@ -22,7 +22,10 @@ export default function GoogleAd({ slot, format = "auto" }: GoogleAdProps) {
   }, [clientId]);
 
   return (
-    <div className="min-h-[600px] w-[160px] bg-gray-200 flex items-center justify-center">
+    <div
+      className="min-h-[600px] w-[160px] bg-gray-200 flex items-center justify-center"
+      data-testid={`google-ad-${slot}`}
+    >
       {clientId ? (
         <ins
           className="adsbygoogle"
