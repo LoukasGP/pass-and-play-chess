@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
+import confetti from "canvas-confetti";
 import GoogleAd from "@/components/GoogleAd";
 import Toast from "@/components/Toast";
 import SoundToggle from "@/components/SoundToggle";
@@ -29,6 +30,9 @@ export default function Home() {
     null,
   );
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [victoryWinner, setVictoryWinner] = useState<"White" | "Black" | null>(
+    null,
+  );
   const [soundEnabled, setSoundEnabled] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("soundEnabled") !== "false";
@@ -45,7 +49,51 @@ export default function Home() {
     }
   }, []);
 
-  const playSound = (type: "check" | "checkmate") => {
+  // Fire confetti when victory modal appears
+  useEffect(() => {
+    if (victoryWinner) {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ["#FFD700", "#FFA500", "#FF6347"],
+        disableForReducedMotion: true,
+      });
+    }
+  }, [victoryWinner]);
+
+  type SoundType = "move" | "capture" | "castle" | "check" | "checkmate";
+
+  const detectMoveType = (game: Chess): SoundType => {
+    // Priority: checkmate > check > castle > capture > move
+    if (game.isCheckmate()) {
+      return "checkmate";
+    }
+    if (game.isCheck()) {
+      return "check";
+    }
+
+    const history = game.history({ verbose: true });
+    const lastMove = history[history.length - 1];
+
+    if (!lastMove) {
+      return "move";
+    }
+
+    // Check for castling
+    if (lastMove.flags.includes("k") || lastMove.flags.includes("q")) {
+      return "castle";
+    }
+
+    // Check for capture
+    if (lastMove.captured) {
+      return "capture";
+    }
+
+    return "move";
+  };
+
+  const playSound = (type: SoundType) => {
     if (!soundEnabled) return;
 
     const audio = new Audio(`/sounds/${type}.mp3`);
@@ -161,6 +209,23 @@ export default function Home() {
     }
   }
 
+  function downloadPGN(game: Chess, winner: string) {
+    const pgn = game.pgn();
+    const blob = new Blob([pgn], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `chess-game-${winner}-wins-${Date.now()}.pgn`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function handlePlayAgain() {
+    handleNewGame();
+    setVictoryWinner(null);
+    setLastMove(null);
+  }
+
   function handleModalEscape(event: React.KeyboardEvent) {
     if (event.key === "Escape") {
       handleNewGame();
@@ -183,9 +248,7 @@ export default function Home() {
     const currentTurn = game.turn(); // 'w' | 'b'
 
     if (piece && piece.color !== currentTurn) {
-      setToastMessage(
-        `It's ${currentTurn === "w" ? "White" : "Black"}'s turn!`,
-      );
+      setToastMessage(`${currentTurn === "w" ? "White" : "Black"} to move`);
       return false;
     }
 
@@ -214,11 +277,14 @@ export default function Home() {
         });
       }
 
-      // Play sound based on game state
+      // Play sound based on move type
+      const moveType = detectMoveType(gameCopy);
+      playSound(moveType);
+
+      // Check for checkmate and set winner
       if (gameCopy.isCheckmate()) {
-        playSound("checkmate");
-      } else if (gameCopy.isCheck()) {
-        playSound("check");
+        const loser = gameCopy.turn(); // 'w' or 'b'
+        setVictoryWinner(loser === "w" ? "Black" : "White");
       }
 
       return true;
@@ -230,6 +296,39 @@ export default function Home() {
   return (
     <>
       <Toast message={toastMessage} onDismiss={() => setToastMessage(null)} />
+      {victoryWinner && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+          role="dialog"
+          aria-labelledby="victory-title"
+          aria-describedby="victory-subtitle"
+          aria-live="assertive"
+        >
+          <div className="bg-white p-6 rounded shadow-lg max-w-md">
+            <h2 id="victory-title" className="text-2xl font-bold mb-2">
+              {victoryWinner} Wins! 🎉
+            </h2>
+            <p id="victory-subtitle" className="text-gray-600 mb-6">
+              Checkmate
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => downloadPGN(game, victoryWinner)}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                autoFocus
+              >
+                Download Moves (PGN)
+              </button>
+              <button
+                onClick={handlePlayAgain}
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              >
+                Play Again
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {showResumeModal && savedGame && (
         <div
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"

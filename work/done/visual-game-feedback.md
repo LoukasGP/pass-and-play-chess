@@ -92,7 +92,7 @@ useEffect(() => {
 
 ### Step 3: Add Turn Validation
 
-In `onDrop` handler, before attempting move, check if piece color matches `game.turn()`. If mismatch, set toast message "It's White's turn!" or "It's Black's turn!" and return false. Use `game.get(sourceSquare)` to retrieve piece and check `.color` property.
+In `onDrop` handler, before attempting move, check if piece color matches `game.turn()`. If mismatch, set toast message "White to move" or "Black to move" and return false. Use `game.get(sourceSquare)` to retrieve piece and check `.color` property.
 
 ```typescript
 const piece = game.get(sourceSquare);
@@ -109,7 +109,7 @@ if (piece && piece.color !== currentTurn) {
 **app/page.test.tsx:**
 
 - Test: Make move e2→e4 → verify customSquareStyles contains e2 and e4 with yellow background
-- Test: Drag white piece when black's turn → toast shows "It's Black's turn!"
+- Test: Drag white piece when black's turn → toast shows "Black to move"
 - Test: Toast auto-dismisses → wait 2.1s, verify not in DOM
 
 **components/Toast.test.tsx:**
@@ -156,8 +156,8 @@ Run `npm run build` after Step 2 to catch Toast component integration issues ear
 
 - [ ] Test: Move e2→e4 → customSquareStyles contains `{ e2: {...}, e4: {...} }` with yellow background
 - [ ] Test: Move e4→e5 after previous move → only e4 and e5 highlighted, e2 cleared
-- [ ] Test: White's turn, drag black piece (e7→e5) → toast shows "It's White's turn!", board unchanged
-- [ ] Test: Black's turn, drag white piece (e2→e4) → toast shows "It's Black's turn!", board unchanged
+- [ ] Test: White's turn, drag black piece (e7→e5) → toast shows "White to move", board unchanged
+- [ ] Test: Black's turn, drag white piece (e2→e4) → toast shows "Black to move", board unchanged
 - [ ] Test: Toast visible initially → wait 2.1s → toast removed from DOM
 - [ ] Test: Toast component with null message → not rendered in DOM
 - [ ] Test: Toast includes aria-live="polite" attribute
@@ -174,6 +174,6 @@ Manual verification:
 
 1. Start app, make move e2→e4 → e2 and e4 highlighted in yellow
 2. Make move e7→e5 → e7 and e5 now highlighted, e2/e4 cleared
-3. Try to drag white piece (black's turn) → toast appears "It's Black's turn!", auto-dismisses after 2s
+3. Try to drag white piece (black's turn) → toast appears "Black to move", auto-dismisses after 2s
 4. Resize to mobile width → toast does not cover board
 5. Test with screen reader → turn error announced via ARIA live region
