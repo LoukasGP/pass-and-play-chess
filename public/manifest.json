@@ -1,7 +1,7 @@
 {
-  "name": "Pass & Play Chess | Free Offline Chess Board",
+  "name": "Chess Offline – Play 2 Player Chess on One Device",
   "short_name": "Chess",
-  "description": "Play chess offline with a friend on the same device. Pass-and-play chess board with drag-and-drop moves.",
+  "description": "Play chess offline with someone next to you. Free chess board with drag-and-drop moves.",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#ffffff",

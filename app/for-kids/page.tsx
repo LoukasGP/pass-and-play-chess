@@ -17,10 +17,10 @@ export default function ForKids() {
 
         <section className="mb-8">
           <p className="text-lg text-gray-700 leading-relaxed mb-4">
-            Teaching chess to children should be simple and focused. This pass
-            and play chess board gives kids a clean, distraction-free space to
-            learn and play chess together — no ads, no account required, no chat
-            features, and works completely offline.
+            Teaching chess to children should be simple and focused. Chess
+            Offline gives kids a clean, distraction-free space to learn and play
+            chess together — no ads, no account required, no chat features, and
+            works completely offline.
           </p>
         </section>
 
@@ -91,11 +91,10 @@ export default function ForKids() {
             Perfect for Teaching Chess Basics
           </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            When teaching kids chess, simplicity matters. This pass and play
-            chess board validates all moves automatically, so children
-            can&apos;t make illegal moves — helping them learn the rules
-            naturally through play. The drag-and-drop interface is intuitive for
-            young learners.
+            When teaching kids chess, simplicity matters. Chess Offline
+            validates all moves automatically, so children can&apos;t make
+            illegal moves — helping them learn the rules naturally through play.
+            The drag-and-drop interface is intuitive for young learners.
           </p>
           <p className="text-gray-700 leading-relaxed mb-4">
             Because two players share one device, you can sit next to your child

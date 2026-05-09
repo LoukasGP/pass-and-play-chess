@@ -1,7 +1,7 @@
 # Game State Persistence
 
 **Date:** 2026-05-08
-**Status:** 🔴 Not Started
+**Status:** ✅ Done
 **Spike:** [game-state-persistence.md](../spike/game-state-persistence.md)
 **Dependencies:** None
 
@@ -161,20 +161,20 @@ Expand `app/page.test.tsx`:
 
 ## ✅ Acceptance Criteria
 
-- [ ] Game auto-saves to sessionStorage on every move (no user action required)
-- [ ] Page refresh preserves game state (reads from sessionStorage)
-- [ ] Browser close → reopen shows "Resume last game?" modal
-- [ ] "Resume" button restores exact board position from localStorage
-- [ ] "New Game" button starts fresh game and clears saved state
-- [ ] Modal displays human-readable timestamp of last game
-- [ ] Modal keyboard accessible (Tab, Enter, Escape)
-- [ ] Escape key dismisses modal and starts new game
-- [ ] Corrupted FEN gracefully falls back to new game (doesn't crash)
-- [ ] Incognito mode: sessionStorage works, localStorage failure doesn't break app
-- [ ] Multiple tabs: each tab has independent sessionStorage (don't interfere)
-- [ ] **Negative:** Page doesn't prompt to resume if no saved game exists
-- [ ] **Negative:** Modal doesn't appear on every page load (only when saved game exists)
-- [ ] `npm run build` succeeds
+- [x] Game auto-saves to sessionStorage on every move (no user action required)
+- [x] Page refresh preserves game state (reads from sessionStorage)
+- [x] Browser close → reopen shows "Resume last game?" modal
+- [x] "Resume" button restores exact board position from localStorage
+- [x] "New Game" button starts fresh game and clears saved state
+- [x] Modal displays human-readable timestamp of last game
+- [x] Modal keyboard accessible (Tab, Enter, Escape)
+- [x] Escape key dismisses modal and starts new game
+- [x] Corrupted FEN gracefully falls back to new game (doesn't crash)
+- [x] Incognito mode: sessionStorage works, localStorage failure doesn't break app
+- [x] Multiple tabs: each tab has independent sessionStorage (don't interfere)
+- [x] **Negative:** Page doesn't prompt to resume if no saved game exists
+- [x] **Negative:** Modal doesn't appear on every page load (only when saved game exists)
+- [x] `npm run build` succeeds
 
 ## 🚫 Out of Scope
 
@@ -186,14 +186,14 @@ Expand `app/page.test.tsx`:
 
 ## 🧪 Test Cases
 
-- [ ] Test: Make 3 moves, refresh page → board shows same position
-- [ ] Test: Make 5 moves, close browser, reopen → modal appears with correct timestamp
-- [ ] Test: Click "Resume" on modal → board restores exact position (white's turn if 5 moves)
-- [ ] Test: Click "New Game" on modal → board resets to starting position
-- [ ] Test: Save corrupted FEN to localStorage, reload → starts new game without error
-- [ ] Test: Block localStorage (simulate incognito), make moves, refresh → game still persists via sessionStorage
-- [ ] Test: Open two tabs, make different moves in each → tabs don't interfere (each has own sessionStorage)
-- [ ] Test: First visit (no saved game) → no modal, board starts at default position
+- [x] Test: Make 3 moves, refresh page → board shows same position
+- [x] Test: Make 5 moves, close browser, reopen → modal appears with correct timestamp
+- [x] Test: Click "Resume" on modal → board restores exact position (white's turn if 5 moves)
+- [x] Test: Click "New Game" on modal → board resets to starting position
+- [x] Test: Save corrupted FEN to localStorage, reload → starts new game without error
+- [x] Test: Block localStorage (simulate incognito), make moves, refresh → game still persists via sessionStorage
+- [x] Test: Open two tabs, make different moves in each → tabs don't interfere (each has own sessionStorage)
+- [x] Test: First visit (no saved game) → no modal, board starts at default position
 
 ## ✅ Verification
 

@@ -3,21 +3,21 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Pass & Play Chess | Free Offline Chess Board",
+  title: "Chess Offline – Play 2 Player Chess on One Device",
   description:
-    "Play chess offline with a friend on the same device. Pass-and-play chess board with drag-and-drop moves. No login, no download required.",
+    "Play chess offline with someone next to you. Free chess board with drag-and-drop moves. No login, no download required.",
   openGraph: {
-    title: "Pass & Play Chess | Free Offline Chess Board",
+    title: "Chess Offline – Play 2 Player Chess on One Device",
     description:
-      "Play chess offline with a friend on the same device. Pass-and-play chess board with drag-and-drop moves. No login, no download required.",
+      "Play chess offline with someone next to you. Free chess board with drag-and-drop moves. No login, no download required.",
     type: "website",
     images: ["/og.png"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pass & Play Chess | Free Offline Chess Board",
+    title: "Chess Offline – Play 2 Player Chess on One Device",
     description:
-      "Play chess offline with a friend on the same device. Pass-and-play chess board with drag-and-drop moves. No login, no download required.",
+      "Play chess offline with someone next to you. Free chess board with drag-and-drop moves. No login, no download required.",
     images: ["/og.png"],
   },
 };
@@ -33,8 +33,8 @@ export default function RootLayout({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Pass & Play Chess",
-    description: "Free offline chess board for two players on the same device",
+    name: "Chess Offline",
+    description: "Free offline chess board for two players on one device",
     applicationCategory: "Game",
     operatingSystem: "Web Browser",
     offers: {

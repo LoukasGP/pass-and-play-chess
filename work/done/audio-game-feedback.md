@@ -2,7 +2,7 @@
 
 **Parent:** None
 **Date:** 2026-05-08
-**Status:** 🔴 Not Started
+**Status:** ✅ Done
 **Dependencies:** None (can run parallel with Ticket 01, but recommend sequential to avoid merge conflicts in app/page.tsx)
 
 ---
@@ -146,21 +146,21 @@ Run `npm run build` after Step 2 and Step 4 to verify integration.
 
 ## ✅ Acceptance Criteria
 
-- [ ] When game ends in checkmate, `checkmate.mp3` plays (if sound enabled)
-- [ ] When king is in check (not checkmate), `check.mp3` plays (if sound enabled)
-- [ ] Sound toggle button visible in bottom-right corner of viewport (does not cover board)
-- [ ] Button displays 🔊 icon when sound enabled, 🔇 when disabled
-- [ ] Clicking toggle button switches sound on/off and updates icon
-- [ ] Sound preference persists across page reloads via localStorage
-- [ ] When sound disabled, no audio plays on checkmate or check
-- [ ] GA4 events fired: `sound_played` (with sound_type), `sound_toggled` (with enabled boolean)
-- [ ] Sound toggle button has ≥44×44px touch target (WCAG 2.5.5)
-- [ ] Sound toggle button has `aria-label` for screen readers
-- [ ] Browser autoplay policy does NOT crash app (silent fail on blocked audio)
-- [ ] Sound does NOT play on stalemate or draw (only checkmate and check)
-- [ ] Total sound asset size <50KB
-- [ ] All existing tests continue to pass
-- [ ] `npm run build` succeeds
+- [x] When game ends in checkmate, `checkmate.mp3` plays (if sound enabled)
+- [x] When king is in check (not checkmate), `check.mp3` plays (if sound enabled)
+- [x] Sound toggle button visible in bottom-right corner of viewport (does not cover board)
+- [x] Button displays 🔊 icon when sound enabled, 🔇 when disabled
+- [x] Clicking toggle button switches sound on/off and updates icon
+- [x] Sound preference persists across page reloads via localStorage
+- [x] When sound disabled, no audio plays on checkmate or check
+- [x] GA4 events fired: `sound_played` (with sound_type), `sound_toggled` (with enabled boolean)
+- [x] Sound toggle button has ≥44×44px touch target (WCAG 2.5.5)
+- [x] Sound toggle button has `aria-label` for screen readers
+- [x] Browser autoplay policy does NOT crash app (silent fail on blocked audio)
+- [x] Sound does NOT play on stalemate or draw (only checkmate and check)
+- [x] Total sound asset size <50KB
+- [x] All existing tests continue to pass
+- [x] `npm run build` succeeds
 
 ## 🚫 Out of Scope
 

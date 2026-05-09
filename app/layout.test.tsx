@@ -1,16 +1,17 @@
 import { metadata } from "./layout";
 
 describe("SEO Metadata", () => {
-  it("should have optimized title for pass-and-play chess", () => {
-    expect(metadata.title).toBe("Pass & Play Chess | Free Offline Chess Board");
+  it("should have optimized title for chess offline", () => {
+    expect(metadata.title).toBe(
+      "Chess Offline – Play 2 Player Chess on One Device",
+    );
   });
 
   it("should have description under 155 chars with target keywords", () => {
     const desc = metadata.description as string;
     expect(desc).toBeDefined();
     expect(desc.length).toBeLessThanOrEqual(155);
-    expect(desc.toLowerCase()).toContain("pass");
-    expect(desc.toLowerCase()).toContain("play");
+    expect(desc.toLowerCase()).toContain("chess");
     expect(desc.toLowerCase()).toContain("offline");
   });
 

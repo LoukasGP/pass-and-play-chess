@@ -1,6 +1,6 @@
-# Pass & Play Chess
+# Chess Offline
 
-Offline two-player chess board built with Next.js. Two players can play chess together on the same device using drag-and-drop piece movement.
+Offline two-player chess board built with Next.js. Two players can play chess together on one device using drag-and-drop piece movement.
 
 ## Features
 

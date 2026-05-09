@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "How to Play Pass & Play Chess",
+  title: "How to Play Chess Offline",
   description:
-    "Learn how to play pass and play chess offline on the same device. Simple instructions for two-player chess with no account required.",
+    "Learn how to play chess offline on one device. Simple instructions for two-player chess with no account required.",
 };
 
 export default function HowToPlay() {
@@ -12,35 +12,35 @@ export default function HowToPlay() {
     <div className="min-h-screen bg-white px-4 py-8 md:px-8 md:py-12">
       <article className="max-w-3xl mx-auto">
         <h1 className="text-4xl font-bold text-gray-900 mb-6">
-          How to Play Pass & Play Chess
+          How to Play Chess Offline
         </h1>
 
         <section className="mb-8">
           <p className="text-lg text-gray-700 leading-relaxed mb-4">
-            Pass and play chess is the simplest way to play chess with a friend.
-            Two players share one device and take turns moving pieces. No
+            Chess Offline is the simplest way to play chess with someone next to
+            you. Two players share one device and take turns moving pieces. No
             internet connection, no account signup, no complicated setup—just
-            instant offline chess on the same device.
+            instant offline chess on one device.
           </p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-            What is Pass & Play Chess?
+            What is Chess Offline?
           </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            Pass and play chess means two players share a single device to play
-            chess together. You sit across from your opponent, make your move by
-            dragging a chess piece, then pass the device to your friend for
-            their turn. It&apos;s the digital equivalent of playing chess on a
-            physical board, but with the convenience of automatic move
-            validation and no pieces to lose.
+            Chess Offline means two players share a single device to play chess
+            together. You sit across from your opponent, make your move by
+            dragging a chess piece, then pass the device for their turn.
+            It&apos;s the digital equivalent of playing chess on a physical
+            board, but with the convenience of automatic move validation and no
+            pieces to lose.
           </p>
           <p className="text-gray-700 leading-relaxed">
             Unlike online chess where you play against strangers over the
-            internet, pass and play chess keeps the game local and personal.
-            Perfect for playing chess offline on planes, trains, cafes, or
-            anywhere without reliable internet.
+            internet, Chess Offline keeps the game local and personal. Perfect
+            for playing chess offline on planes, trains, cafes, or anywhere
+            without reliable internet.
           </p>
         </section>
 
@@ -112,7 +112,7 @@ export default function HowToPlay() {
 
         <section className="mt-12 p-6 bg-blue-50 rounded-lg text-center">
           <p className="text-gray-700 mb-4 text-lg">
-            Ready to play pass and play chess?
+            Ready to play Chess Offline?
           </p>
           <Link
             href="/"

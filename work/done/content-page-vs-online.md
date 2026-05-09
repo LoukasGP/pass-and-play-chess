@@ -20,18 +20,18 @@ Create `/vs-online` comparison page to target "pass and play vs online chess" an
 
 ## ✅ Acceptance Criteria
 
-- [ ] Route accessible at `/vs-online`
-- [ ] Page has unique `<title>` meta tag: "Pass & Play vs Online Chess — What's the Difference?"
-- [ ] Page has unique meta description ≤155 chars with keywords "pass and play", "online chess", "comparison"
-- [ ] Page has `<h1>` heading: "Pass & Play vs Online Chess"
-- [ ] Page has 2–3 `<h2>` subheadings for content structure
-- [ ] Content is 400–600 words comparing pass-and-play vs online chess
-- [ ] Content highlights our advantages: no account, works offline, zero distractions, instant start
-- [ ] Content includes comparison table or list format for readability
-- [ ] Page includes internal link to home page: "Try Pass & Play Chess →" or similar CTA
-- [ ] Page does NOT bash competitors unfairly — factual comparison only
-- [ ] Page is mobile responsive
-- [ ] `npm run build` succeeds
+- [x] Route accessible at `/vs-online`
+- [x] Page has unique `<title>` meta tag: "Pass & Play vs Online Chess — What's the Difference?"
+- [x] Page has unique meta description ≤155 chars with keywords "pass and play", "online chess", "comparison"
+- [x] Page has `<h1>` heading: "Pass & Play vs Online Chess"
+- [x] Page has 2–3 `<h2>` subheadings for content structure
+- [x] Content is 400–600 words comparing pass-and-play vs online chess
+- [x] Content highlights our advantages: no account, works offline, zero distractions, instant start
+- [x] Content includes comparison table or list format for readability
+- [x] Page includes internal link to home page: "Try Pass & Play Chess →" or similar CTA
+- [x] Page does NOT bash competitors unfairly — factual comparison only
+- [x] Page is mobile responsive
+- [x] `npm run build` succeeds
 
 ## 🧪 Test Cases
 

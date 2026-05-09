@@ -2,7 +2,7 @@
 
 **Parent:** None
 **Date:** 2026-05-08
-**Status:** 🔴 Not Started
+**Status:** ✅ Done
 **Dependencies:** None
 
 ---
@@ -132,17 +132,17 @@ Run `npm run build` after Step 2 to catch Toast component integration issues ear
 
 ## ✅ Acceptance Criteria
 
-- [ ] After any legal move, origin and destination squares have yellow background overlay
-- [ ] Yellow overlay uses `rgba(255, 255, 0, 0.4)` for 4.5:1 contrast ratio (WCAG 2.1 AA compliant)
-- [ ] Highlight clears when next move is made (only most recent move highlighted)
-- [ ] When player drags opponent's piece, toast appears at top-center with "It's [Color]'s turn!"
-- [ ] Toast auto-dismisses after 2 seconds without user action
-- [ ] Toast does NOT cover chessboard on mobile viewports (320px width)
-- [ ] Toast component includes `aria-live="polite"` region for screen reader announcements
-- [ ] Invalid move due to wrong turn does NOT update board position
-- [ ] Dragging own piece when it's your turn does NOT trigger toast
-- [ ] All existing tests continue to pass
-- [ ] `npm run build` succeeds
+- [x] After any legal move, origin and destination squares have yellow background overlay
+- [x] Yellow overlay uses `rgba(255, 255, 0, 0.4)` for 4.5:1 contrast ratio (WCAG 2.1 AA compliant)
+- [x] Highlight clears when next move is made (only most recent move highlighted)
+- [x] When player drags opponent's piece, toast appears at top-center with "It's [Color]'s turn!"
+- [x] Toast auto-dismisses after 2 seconds without user action
+- [x] Toast does NOT cover chessboard on mobile viewports (320px width)
+- [x] Toast component includes `aria-live="polite"` region for screen reader announcements
+- [x] Invalid move due to wrong turn does NOT update board position
+- [x] Dragging own piece when it's your turn does NOT trigger toast
+- [x] All existing tests continue to pass
+- [x] `npm run build` succeeds
 
 ## 🚫 Out of Scope
 
