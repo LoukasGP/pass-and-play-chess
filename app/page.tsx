@@ -33,6 +33,7 @@ export default function Home() {
   const [victoryWinner, setVictoryWinner] = useState<"White" | "Black" | null>(
     null,
   );
+  const [selectedSquare, setSelectedSquare] = useState<string | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("soundEnabled") !== "false";
@@ -188,6 +189,7 @@ export default function Home() {
       const restoredGame = new Chess(savedGame.fen);
       setGame(restoredGame);
       setShowResumeModal(false);
+      setSelectedSquare(null);
     } catch (error) {
       // Corrupted FEN - start new game
       console.warn("Corrupted FEN detected, starting new game:", error);
@@ -200,6 +202,7 @@ export default function Home() {
   function handleNewGame() {
     setGame(new Chess());
     setShowResumeModal(false);
+    setSelectedSquare(null);
 
     try {
       localStorage.removeItem(STORAGE_KEYS.LOCAL_FEN);
@@ -224,6 +227,7 @@ export default function Home() {
     handleNewGame();
     setVictoryWinner(null);
     setLastMove(null);
+    setSelectedSquare(null);
   }
 
   function handleModalEscape(event: React.KeyboardEvent) {
@@ -266,6 +270,7 @@ export default function Home() {
 
       setGame(gameCopy);
       setLastMove({ from: sourceSquare, to: targetSquare });
+      setSelectedSquare(null); // Clear selection after move
       const newMoveCount = moveCount + 1;
       setMoveCount(newMoveCount);
 
@@ -290,6 +295,54 @@ export default function Home() {
       return true;
     } catch {
       return false;
+    }
+  }
+
+  function onSquareClick({
+    piece,
+    square,
+  }: {
+    piece: { pieceType: string } | null;
+    square: string;
+  }) {
+    const currentTurn = game.turn();
+
+    // If no piece is selected
+    if (!selectedSquare) {
+      // Select the piece if it belongs to the current player
+      if (piece) {
+        const pieceColor = piece.pieceType.charAt(0).toLowerCase(); // 'w' or 'b'
+        if (pieceColor === currentTurn) {
+          setSelectedSquare(square);
+        }
+      }
+      return;
+    }
+
+    // If clicking the same square, deselect it
+    if (selectedSquare === square) {
+      setSelectedSquare(null);
+      return;
+    }
+
+    // If clicking another piece of the same color, select that piece instead
+    if (piece) {
+      const pieceColor = piece.pieceType.charAt(0).toLowerCase();
+      if (pieceColor === currentTurn) {
+        setSelectedSquare(square);
+        return;
+      }
+    }
+
+    // Try to move the selected piece to the clicked square
+    const moved = onDrop({
+      sourceSquare: selectedSquare,
+      targetSquare: square,
+    });
+
+    // Clear selection if move was successful
+    if (moved) {
+      setSelectedSquare(null);
     }
   }
 
@@ -378,15 +431,15 @@ export default function Home() {
         <p>
           Pass and play chess means two players share one device and take turns
           moving pieces. Sit across from your opponent, make your move with drag
-          and drop, then pass the device to your friend. No complicated setup,
-          no waiting for online opponents — just instant offline chess for two
-          players on the same device.
+          and drop or click to move, then pass the device to your friend. No
+          complicated setup, no waiting for online opponents — just instant
+          offline chess for two players on the same device.
         </p>
         <h2>Features</h2>
         <ul>
           <li>No account required — start playing chess instantly</li>
           <li>Works completely offline — no internet connection needed</li>
-          <li>Drag and drop moves — intuitive piece movement</li>
+          <li>Drag and drop or click to move — intuitive piece movement</li>
           <li>Legal move validation — ensures valid chess moves only</li>
           <li>Fullscreen chess board — distraction-free gameplay</li>
           <li>Free forever — no subscriptions or hidden costs</li>
@@ -423,15 +476,21 @@ export default function Home() {
             options={{
               position: game.fen(),
               onPieceDrop: onDrop,
+              onSquareClick,
               allowDragging: true,
-              ...(lastMove && {
-                squareStyles: {
+              squareStyles: {
+                ...(lastMove && {
                   [lastMove.from]: {
                     backgroundColor: "rgba(255, 255, 0, 0.4)",
                   },
                   [lastMove.to]: { backgroundColor: "rgba(255, 255, 0, 0.4)" },
-                },
-              }),
+                }),
+                ...(selectedSquare && {
+                  [selectedSquare]: {
+                    backgroundColor: "rgba(255, 255, 0, 0.4)",
+                  },
+                }),
+              },
             }}
           />
         </div>
