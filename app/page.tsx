@@ -417,11 +417,13 @@ export default function Home() {
             width: "100%",
             aspectRatio: "1",
           }}
+          data-testid="chessboard-container"
         >
           <Chessboard
             options={{
               position: game.fen(),
               onPieceDrop: onDrop,
+              allowDragging: true,
               ...(lastMove && {
                 squareStyles: {
                   [lastMove.from]: {

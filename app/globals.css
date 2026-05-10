@@ -24,3 +24,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@media (max-width: 1023px) {
+  [data-piece^="b"] svg {
+    /* Rotate black pieces 180° on mobile and tablet viewports */
+    /* Apply to SVG child, not parent, to avoid interfering with drag-and-drop transforms */
+    transform: rotate(180deg);
+  }
+}
