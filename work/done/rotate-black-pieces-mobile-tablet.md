@@ -51,6 +51,7 @@ interface BlackPieceSquares {
 4. Check for `data-piece`, `data-square`, or similar attributes
 
 **Decision point:**
+
 - ✅ If `data-piece="bN"` (or similar) exists → Proceed with **Approach F** (pure CSS, Steps 2a–2b)
 - ❌ If no piece identifier attribute exists → Proceed with **Approach D** (JS-driven CSS, Steps 3a–3c)
 
@@ -97,7 +98,9 @@ Add viewport detection and black piece tracking to `app/page.tsx`:
 
 ```typescript
 // After existing useState declarations
-const [viewport, setViewport] = useState<"mobile" | "tablet" | "desktop">("desktop");
+const [viewport, setViewport] = useState<"mobile" | "tablet" | "desktop">(
+  "desktop",
+);
 
 // After existing useEffects
 useEffect(() => {
@@ -119,7 +122,7 @@ useEffect(() => {
 const getBlackPieceSquares = (): string[] => {
   const board = game.board();
   const squares: string[] = [];
-  
+
   board.forEach((row, rankIndex) => {
     row.forEach((square, fileIndex) => {
       if (square && square.color === "b") {
@@ -128,7 +131,7 @@ const getBlackPieceSquares = (): string[] => {
       }
     });
   });
-  
+
   return squares;
 };
 ```
@@ -212,14 +215,16 @@ Create `tests/e2e/piece-rotation.spec.ts`:
 import { test, expect } from "@playwright/test";
 
 test.describe("Black Piece Rotation on Mobile/Tablet", () => {
-  test("should rotate black pieces on mobile viewport (375×667)", async ({ page }) => {
+  test("should rotate black pieces on mobile viewport (375×667)", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
 
     // Inspect a black piece element (e.g., black pawn on a7)
     const blackPiece = page.locator('[data-square="a7"] .piece');
-    const transform = await blackPiece.evaluate((el) => 
-      window.getComputedStyle(el).transform
+    const transform = await blackPiece.evaluate(
+      (el) => window.getComputedStyle(el).transform,
     );
 
     // transform should be a rotation matrix equivalent to rotate(180deg)
@@ -227,25 +232,29 @@ test.describe("Black Piece Rotation on Mobile/Tablet", () => {
     expect(transform).toMatch(/matrix\(-1.*-1.*0.*0\)|rotate\(180deg\)/);
   });
 
-  test("should rotate black pieces on tablet viewport (768×1024)", async ({ page }) => {
+  test("should rotate black pieces on tablet viewport (768×1024)", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.goto("/");
 
     const blackPiece = page.locator('[data-square="e7"] .piece');
-    const transform = await blackPiece.evaluate((el) => 
-      window.getComputedStyle(el).transform
+    const transform = await blackPiece.evaluate(
+      (el) => window.getComputedStyle(el).transform,
     );
 
     expect(transform).toMatch(/matrix\(-1.*-1.*0.*0\)|rotate\(180deg\)/);
   });
 
-  test("should NOT rotate black pieces on desktop viewport (1280×720)", async ({ page }) => {
+  test("should NOT rotate black pieces on desktop viewport (1280×720)", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto("/");
 
     const blackPiece = page.locator('[data-square="a7"] .piece');
-    const transform = await blackPiece.evaluate((el) => 
-      window.getComputedStyle(el).transform
+    const transform = await blackPiece.evaluate(
+      (el) => window.getComputedStyle(el).transform,
     );
 
     // No rotation or identity matrix: "none" or "matrix(1, 0, 0, 1, 0, 0)"
@@ -257,35 +266,43 @@ test.describe("Black Piece Rotation on Mobile/Tablet", () => {
     await page.goto("/");
 
     // Move black pawn from a7 to a5
-    await page.locator('[data-square="a7"]').dragTo(page.locator('[data-square="a5"]'));
+    await page
+      .locator('[data-square="a7"]')
+      .dragTo(page.locator('[data-square="a5"]'));
 
     // Verify black pawn on new square (a5) is still rotated
     const movedPiece = page.locator('[data-square="a5"] .piece');
-    const transform = await movedPiece.evaluate((el) => 
-      window.getComputedStyle(el).transform
+    const transform = await movedPiece.evaluate(
+      (el) => window.getComputedStyle(el).transform,
     );
 
     expect(transform).toMatch(/matrix\(-1.*-1.*0.*0\)|rotate\(180deg\)/);
   });
 
-  test("should NOT rotate white pieces on mobile viewport", async ({ page }) => {
+  test("should NOT rotate white pieces on mobile viewport", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
 
     const whitePiece = page.locator('[data-square="a2"] .piece');
-    const transform = await whitePiece.evaluate((el) => 
-      window.getComputedStyle(el).transform
+    const transform = await whitePiece.evaluate(
+      (el) => window.getComputedStyle(el).transform,
     );
 
     expect(transform).toMatch(/none|matrix\(1.*0.*0.*1.*0.*0\)/);
   });
 
-  test("should maintain drag-and-drop functionality for rotated pieces", async ({ page }) => {
+  test("should maintain drag-and-drop functionality for rotated pieces", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
 
     // Try to drag a rotated black piece
-    await page.locator('[data-square="e7"]').dragTo(page.locator('[data-square="e5"]'));
+    await page
+      .locator('[data-square="e7"]')
+      .dragTo(page.locator('[data-square="e5"]'));
 
     // Verify move was successful (piece moved to new square)
     const movedPiece = page.locator('[data-square="e5"] .piece');
@@ -298,12 +315,12 @@ Run `npm run test:e2e` after Step 5.
 
 ## 📁 Affected Files
 
-| Action | Path                                  | Role                                                |
-| ------ | ------------------------------------- | --------------------------------------------------- |
-| Modify | `app/globals.css`                     | Add media query for black piece rotation (all approaches) |
-| Modify | `app/page.tsx`                        | Add viewport detection and dynamic CSS (Approach D only) |
-| Modify | `app/page.test.tsx`                   | Add unit tests for rotation logic                   |
-| Create | `tests/e2e/piece-rotation.spec.ts`    | E2E tests for rotation across viewports             |
+| Action | Path                               | Role                                                      |
+| ------ | ---------------------------------- | --------------------------------------------------------- |
+| Modify | `app/globals.css`                  | Add media query for black piece rotation (all approaches) |
+| Modify | `app/page.tsx`                     | Add viewport detection and dynamic CSS (Approach D only)  |
+| Modify | `app/page.test.tsx`                | Add unit tests for rotation logic                         |
+| Create | `tests/e2e/piece-rotation.spec.ts` | E2E tests for rotation across viewports                   |
 
 ## ✅ Acceptance Criteria
 
@@ -349,11 +366,13 @@ npm run ci:validate && npm run test:e2e
 ## 📝 Implementation Notes (2026-05-10)
 
 ### CSS Approach Implemented
+
 - **Approach F (Pure CSS)** successfully implemented
 - CSS rule: `@media (max-width: 1023px) { [data-piece^="b"] svg { transform: rotate(180deg); } }`
 - Applied to SVG child element (not parent) to avoid interfering with react-chessboard's drag-and-drop transforms
 
 ### Test Coverage Limitations
+
 - **4 tests skipped** in `tests/e2e/piece-rotation.spec.ts`:
   1. "should rotate black pieces on mobile viewport (375×667)" — CSS transform not applied in Playwright headless
   2. "should rotate black pieces on tablet viewport (768×1024)" — CSS transform not applied in Playwright headless
@@ -361,11 +380,13 @@ npm run ci:validate && npm run test:e2e
   4. "should maintain drag-and-drop functionality for rotated pieces" — Playwright `.dragTo()` incompatible with react-chessboard's dnd-kit implementation
 
 ### Manual Verification Required
+
 - **CSS rotation on initial load**: Tested in Chrome/Firefox/Safari on actual mobile devices (iPhone, Android)
 - **Rotation persistence during gameplay**: Tested manually by making moves on mobile viewport
 - **Drag-and-drop functionality**: Verified manually that pieces can be dragged after rotation applied
 
 ### Test Results
+
 - **110 tests passed**
 - **20 tests skipped** (4 rotation tests + 16 existing skips)
 - All passing tests confirm no regressions introduced by CSS changes
@@ -389,16 +410,19 @@ npm run ci:validate && npm run test:e2e
 **Approach used:** Approach F (pure CSS)
 
 **Key learnings:**
+
 1. `react-chessboard` exposes `data-piece="bR"` attributes on piece elements (verified via DOM inspection)
 2. CSS selector `[data-piece^="b"]` successfully targets all black pieces
 3. **Critical fix:** `!important` required on `transform: rotate(180deg) !important` to override inline styles from react-chessboard
 4. Without `!important`, inline styles on piece elements blocked CSS rotation
 
 **Files modified:**
+
 - `app/globals.css` — Added media query with `[data-piece^="b"] { transform: rotate(180deg) !important; }`
 - `tests/e2e/piece-rotation.spec.ts` — Created E2E test suite with 6 tests
 
 **Test results:**
+
 - ✅ 20/20 core rotation tests pass (Tests 1, 2, 3, 5 across 5 browser configs)
 - ❌ 10/10 drag-and-drop tests fail (Tests 4, 6 across 5 browser configs) — **unrelated to rotation feature**
 - Issue: Playwright `dragTo()` not moving pieces in test environment (needs investigation)

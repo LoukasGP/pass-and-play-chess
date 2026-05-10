@@ -12,8 +12,8 @@ test.describe("Black Piece Rotation on Mobile/Tablet", () => {
 
     // Inspect a black piece SVG element (CSS applies to svg child)
     const blackPieceSvg = page.locator('[data-piece="bR"] svg').first();
-    const transform = await blackPieceSvg.evaluate((el) =>
-      window.getComputedStyle(el).transform,
+    const transform = await blackPieceSvg.evaluate(
+      (el) => window.getComputedStyle(el).transform,
     );
 
     // transform should be a rotation matrix equivalent to rotate(180deg)
@@ -31,8 +31,8 @@ test.describe("Black Piece Rotation on Mobile/Tablet", () => {
     await page.goto("/");
 
     const blackPieceSvg = page.locator('[data-piece^="b"] svg').first();
-    const transform = await blackPieceSvg.evaluate((el) =>
-      window.getComputedStyle(el).transform,
+    const transform = await blackPieceSvg.evaluate(
+      (el) => window.getComputedStyle(el).transform,
     );
 
     expect(transform).toMatch(/matrix\(-1,\s*0,\s*0,\s*-1,\s*0,\s*0\)/);
@@ -45,8 +45,8 @@ test.describe("Black Piece Rotation on Mobile/Tablet", () => {
     await page.goto("/");
 
     const blackPieceSvg = page.locator('[data-piece^="b"] svg').first();
-    const transform = await blackPieceSvg.evaluate((el) =>
-      window.getComputedStyle(el).transform,
+    const transform = await blackPieceSvg.evaluate(
+      (el) => window.getComputedStyle(el).transform,
     );
 
     // No rotation or identity matrix: "none" or "matrix(1, 0, 0, 1, 0, 0)"
@@ -56,7 +56,9 @@ test.describe("Black Piece Rotation on Mobile/Tablet", () => {
   // Skipped: Cannot reliably set game state via localStorage due to beforeunload handler
   // Core rotation functionality verified by initial load tests (mobile/tablet/desktop)
   // Manual testing required to verify rotation persists after piece moves
-  test.skip("should update rotation when piece moves (mobile)", async ({ page }) => {
+  test.skip("should update rotation when piece moves (mobile)", async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
 
@@ -67,7 +69,7 @@ test.describe("Black Piece Rotation on Mobile/Tablet", () => {
       const fenAfterMoves =
         "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2";
       const timestamp = Date.now().toString();
-      
+
       // Set both storages to prevent beforeunload from overwriting with starting position
       localStorage.setItem("chess_game_last_fen", fenAfterMoves);
       localStorage.setItem("chess_game_last_timestamp", timestamp);
@@ -98,8 +100,8 @@ test.describe("Black Piece Rotation on Mobile/Tablet", () => {
     const svg = movedPiece.locator("svg");
     await expect(svg).toBeVisible();
 
-    const svgTransform = await svg.evaluate((el) =>
-      window.getComputedStyle(el).transform,
+    const svgTransform = await svg.evaluate(
+      (el) => window.getComputedStyle(el).transform,
     );
 
     // Rotation matrix for 180deg: matrix(-1, 0, 0, -1, 0, 0)
@@ -113,8 +115,8 @@ test.describe("Black Piece Rotation on Mobile/Tablet", () => {
     await page.goto("/");
 
     const whitePiece = page.locator('[data-piece^="w"]').first();
-    const transform = await whitePiece.evaluate((el) =>
-      window.getComputedStyle(el).transform,
+    const transform = await whitePiece.evaluate(
+      (el) => window.getComputedStyle(el).transform,
     );
 
     expect(transform).toMatch(/none|matrix\(1,\s*0,\s*0,\s*1,\s*0,\s*0\)/);

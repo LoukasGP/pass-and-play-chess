@@ -10,9 +10,15 @@ test.describe("Game State Persistence", () => {
     });
   });
 
-  test("should show resume modal when saved game exists", async ({ page, browserName }) => {
-    test.skip(browserName === 'firefox' || browserName === 'webkit', 'Flaky in Firefox/Webkit due to localStorage injection timing');
-    
+  test("should show resume modal when saved game exists", async ({
+    page,
+    browserName,
+  }) => {
+    test.skip(
+      browserName === "firefox" || browserName === "webkit",
+      "Flaky in Firefox/Webkit due to localStorage injection timing",
+    );
+
     // Inject saved game into localStorage
     await page.evaluate(() => {
       // After e2-e4, e7-e5
@@ -35,9 +41,15 @@ test.describe("Game State Persistence", () => {
     await expect(page.getByText(/Last played:/i)).toBeVisible();
   });
 
-  test("should restore game when Resume button clicked", async ({ page, browserName }) => {
-    test.skip(browserName === 'firefox' || browserName === 'webkit', 'Flaky in Firefox/Webkit due to localStorage injection timing');
-    
+  test("should restore game when Resume button clicked", async ({
+    page,
+    browserName,
+  }) => {
+    test.skip(
+      browserName === "firefox" || browserName === "webkit",
+      "Flaky in Firefox/Webkit due to localStorage injection timing",
+    );
+
     // Inject saved game (e2-e4, e7-e5)
     const savedFen =
       "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2";
@@ -115,14 +127,14 @@ test.describe("Game State Persistence", () => {
   }) => {
     // Clear all storage at context level first
     await context.clearCookies();
-    
+
     // Navigate and clear storage before page loads state
     await page.goto("/");
     await page.evaluate(() => {
       localStorage.clear();
       sessionStorage.clear();
     });
-    
+
     // Force a clean navigation with no cached state
     await page.goto("/", { waitUntil: "networkidle" });
 

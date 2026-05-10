@@ -188,7 +188,7 @@ const getPieceStyles = () => {
     onPieceDrop: onDrop,
     customPieceStyles: getPieceStyles(), // ⚠️ NOT SUPPORTED in react-chessboard
   }}
-/>
+/>;
 ```
 
 **Pros:**
@@ -215,7 +215,9 @@ const getPieceStyles = () => {
 
 ```tsx
 // app/page.tsx
-const [viewport, setViewport] = useState<"mobile" | "tablet" | "desktop">("desktop");
+const [viewport, setViewport] = useState<"mobile" | "tablet" | "desktop">(
+  "desktop",
+);
 
 useEffect(() => {
   const updateViewport = () => {
@@ -247,7 +249,7 @@ const getBlackPieceSquares = () => {
     getBlackPieceSquares()
       .map((sq) => `[data-square="${sq}"] .piece`)
       .join(", ") + " { transform: rotate(180deg); }"}
-</style>
+</style>;
 ```
 
 **Pros:**
@@ -420,7 +422,9 @@ useEffect(() => {
     board.forEach((row, rankIndex) => {
       row.forEach((square, fileIndex) => {
         if (square && square.color === "b") {
-          blackSquares.push(`${String.fromCharCode(97 + fileIndex)}${8 - rankIndex}`);
+          blackSquares.push(
+            `${String.fromCharCode(97 + fileIndex)}${8 - rankIndex}`,
+          );
         }
       });
     });
@@ -437,24 +441,24 @@ useEffect(() => {
 
 ## 🚨 Risks & Unknowns
 
-| Risk                                   | Likelihood | Impact | Mitigation                                         |
-| -------------------------------------- | ---------- | ------ | -------------------------------------------------- |
-| `data-piece` attribute not exposed    | Medium     | High   | Verify in DOM before implementation                |
-| Rotation breaks drag-and-drop offsets | Low        | High   | Test on real mobile device after CSS applied       |
-| Performance degradation (30fps)       | Low        | Medium | Use CSS transforms (GPU-accelerated), profile in DevTools |
-| Hydration mismatch (SSR vs client)    | Medium     | Medium | Use `useEffect` for viewport detection, not inline checks |
-| Accessibility: rotated pieces confusing for screen readers | Low | Low | Rotation is visual-only, does not affect semantic HTML |
+| Risk                                                       | Likelihood | Impact | Mitigation                                                |
+| ---------------------------------------------------------- | ---------- | ------ | --------------------------------------------------------- |
+| `data-piece` attribute not exposed                         | Medium     | High   | Verify in DOM before implementation                       |
+| Rotation breaks drag-and-drop offsets                      | Low        | High   | Test on real mobile device after CSS applied              |
+| Performance degradation (30fps)                            | Low        | Medium | Use CSS transforms (GPU-accelerated), profile in DevTools |
+| Hydration mismatch (SSR vs client)                         | Medium     | Medium | Use `useEffect` for viewport detection, not inline checks |
+| Accessibility: rotated pieces confusing for screen readers | Low        | Low    | Rotation is visual-only, does not affect semantic HTML    |
 
 ---
 
 ## 📁 Affected Files (Estimated)
 
-| Action | Path                 | Role                                           |
-| ------ | -------------------- | ---------------------------------------------- |
-| Modify | `app/globals.css`    | Add media query + rotation CSS                 |
-| Modify | `app/page.tsx`       | (Optional) JS logic if Approach D chosen       |
-| Create | `app/page.test.tsx`  | Add tests for rotated pieces on mobile/tablet  |
-| Create | `tests/e2e/piece-rotation.spec.ts` | E2E test for rotation on viewport resize |
+| Action | Path                               | Role                                          |
+| ------ | ---------------------------------- | --------------------------------------------- |
+| Modify | `app/globals.css`                  | Add media query + rotation CSS                |
+| Modify | `app/page.tsx`                     | (Optional) JS logic if Approach D chosen      |
+| Create | `app/page.test.tsx`                | Add tests for rotated pieces on mobile/tablet |
+| Create | `tests/e2e/piece-rotation.spec.ts` | E2E test for rotation on viewport resize      |
 
 ---
 

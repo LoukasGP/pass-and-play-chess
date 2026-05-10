@@ -6,9 +6,6 @@ export const metadata: Metadata = {
   title: "Chess Offline – Play 2 Player Chess on One Device",
   description:
     "Play chess offline with someone next to you. Free chess board with drag-and-drop moves. No login, no download required.",
-  icons: {
-    icon: "/favicon.png",
-  },
   openGraph: {
     title: "Chess Offline – Play 2 Player Chess on One Device",
     description:
@@ -51,10 +48,6 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
         {adsenseClientId && (
           <script
             async
@@ -64,6 +57,12 @@ export default function RootLayout({
         )}
       </head>
       <body style={{ margin: 0, padding: 0, overflow: "hidden" }}>
+        <Script
+          id="structured-data"
+          type="application/ld+json"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         {ga4MeasurementId && (
           <>
             <Script

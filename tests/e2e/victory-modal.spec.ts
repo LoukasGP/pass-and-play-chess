@@ -43,7 +43,9 @@ test.describe("Victory Modal & Confetti", () => {
       });
   });
 
-  test("should have sound system available across browsers", async ({ page }) => {
+  test("should have sound system available across browsers", async ({
+    page,
+  }) => {
     await page.goto("/");
 
     // Verify sound files exist (check public/sounds/ accessibility)
